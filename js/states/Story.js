@@ -1,6 +1,6 @@
-var GameName = GameName || {};
+var MonsterTruck = MonsterTruck || {};
 
-GameName.StoryState = {
+MonsterTruck.StoryState = {
     create: function ()
     {
         this.game.state.start('Game');

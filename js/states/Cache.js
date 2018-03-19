@@ -1,6 +1,6 @@
-var GameName = GameName || {};
+var MonsterTruck = MonsterTruck || {};
 
-GameName.CacheState = {
+MonsterTruck.CacheState = {
 
     create: function ()
     {

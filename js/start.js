@@ -1,4 +1,4 @@
-var GameName = GameName || {};//replace with game name variable
+var MonsterTruck = MonsterTruck || {};//replace with game name variable
 
 if(Phaser.Device.ie) //Checks that internet explorer is being used
 {
@@ -21,16 +21,16 @@ else
 
 function run()
 {
-    GameName.game = new Phaser.Game(960, 640, Phaser.AUTO);
+    MonsterTruck.game = new Phaser.Game(960, 640, Phaser.AUTO);
 
-    GameName.game.state.add('Cache', GameName.CacheState);
-    GameName.game.state.add('Boot', GameName.BootState); 
-    GameName.game.state.add('Preload', GameName.PreloadState); 
-    GameName.game.state.add('Game', GameName.GameState);
-    GameName.game.state.add('Story', GameName.StoryState);
-    GameName.game.state.add('End', GameName.EndState);
+    MonsterTruck.game.state.add('Cache', MonsterTruck.CacheState);
+    MonsterTruck.game.state.add('Boot', MonsterTruck.BootState); 
+    MonsterTruck.game.state.add('Preload', MonsterTruck.PreloadState); 
+    MonsterTruck.game.state.add('Game', MonsterTruck.GameState);
+    MonsterTruck.game.state.add('Story', MonsterTruck.StoryState);
+    MonsterTruck.game.state.add('End', MonsterTruck.EndState);
 
-    GameName.game.state.start('Cache');
+    MonsterTruck.game.state.start('Cache');
 }
 /*Copyright (C) Wayside Co. - All Rights Reserved
 * Unauthorized copying of this file, via any medium is strictly prohibited

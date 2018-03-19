@@ -1,6 +1,6 @@
-var GameName = GameName || {};
+var MonsterTruck = MonsterTruck || {};
 
-GameName.BootState = {
+MonsterTruck.BootState = {
 	preload: function(){
 		this.stage.backgroundColor = '#ffffff';
 		this.load.image('loading-background', 'assets/images/loading-background.png');

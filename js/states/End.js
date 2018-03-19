@@ -1,6 +1,6 @@
-var GameName = GameName || {};
+var MonsterTruck = MonsterTruck || {};
 
-GameName.EndState = {
+MonsterTruck.EndState = {
     create: function ()
     {
         
