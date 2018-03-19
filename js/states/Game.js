@@ -5,65 +5,130 @@ MonsterTruck.GameState = {
     {
         this.speed = 0;
         this.start = true;
-        this.add.image(0, 0, 'hill');
+        this.cars = this.add.group();
+        this.obstacles = this.add.group();
+        this.add.sprite(0, 0, 'arena');
         this.physics.startSystem(Phaser.Physics.ARCADE);
         
-        this.sprite = this.add.sprite(160, 580, 'player');
+        this.add.sprite(290, 270, 'ramp');
+        this.add.sprite(570, 270, 'ramp2');
+        
+        this.sprite = this.add.sprite(100, 560, 'player');
         this.sprite.animations.add('walk');
 
         this.sprite.animations.play('walk', 5, true);
         
-        this.add.sprite(100, 100, 'cars', 4);
-        this.add.sprite(200, 100, 'cars', 0);
-        this.add.sprite(300, 100, 'cars', 1);
-        this.grey = this.add.sprite(400, 100, 'cars', 3);
-        //this.add.sprite(0, 0, 'carsCrushed');
         this.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-	    this.sprite.body.checkCollision.up = false;
+	    this.sprite.body.collideWorldBounds = true;
+        this.sprite.body.checkCollision.up = false;
 	    this.sprite.body.checkCollision.down = false;
-        this.physics.enable(this.grey, Phaser.Physics.ARCADE);
-        this.grey.body.collideWorldBounds = true;
-	    this.grey.body.checkCollision.up = false;
-	    this.grey.body.checkCollision.down = false;
-	    this.grey.body.immovable = true;
-        
         
         this.sprite.inputEnabled = true;
 
         // Make this item draggable.
-        this.sprite.input.enableDrag();
+        this.sprite.input.enableDrag(false);
+        //this.sprite.input.dragOffset = new Phaser.Point(-100, 100);
         
-        this.pedal = this.add.sprite(600, 400, 'gas');
-        this.pedal.inputEnabled = true;
-        this.pedal.events.onInputDown.add(function()
-        {
-            this.sprite.body.velocity.x=60.5;
-            this.sprite.body.velocity.y=-50;
-            console.log('speed = ' + this.speed);//use a boolean to use update to add and on input up end it
-        }, this);
-        this.pedal.events.onInputUp.add(function()
-        {
-            this.start = false;
-            this.sprite.body.velocity.x=-60.5;
-            this.sprite.body.velocity.y=50;
-            console.log('speed = ' + this.speed);//use a boolean to use update to add and on input up end it
-        }, this);
+        this.createCars(100, 30, true);
+        this.createCars(40, 150, false);
+        //this.createCars(300, 100);
+        //this.createCars(400, 100);
+        this.world.bringToTop(this.cars);
+        this.createObstacles(450, 270, 'oil');
+        this.createObstacles(500, 20, 'raceRed');
+        this.createObstacles(500, 121, 'raceWhite');
+        this.createObstacles(500, 416, 'raceRed');
+        this.createObstacles(500, 517, 'raceWhite');
         
-        this.sprite.angle=-40;
+        this.createObstacles(50, 50, 'cone');
+        this.createObstacles(30, 500, 'cone');
+        this.createObstacles(90, 500, 'barrelRed');
+        this.createObstacles(150, 500, 'barrelBlue');
+        this.createObstacles(210, 500, 'barrelBlue');
+        this.createObstacles(270, 500, 'barrelRed');
+        //this.createObstacles(330, 500, 'cone');
+        this.createObstacles(30, 100, 'cone');
+        this.createObstacles(90, 100, 'cone');
+        this.createObstacles(150, 100, 'barrelRed');
+        this.createObstacles(210, 100, 'cone');
+        this.createObstacles(270, 100, 'barrelBlue');
+        //this.createObstacles(330, 100, 'cone');
+        this.createObstacles(450, 220, 'barrelBlue');
+        this.createObstacles(390, 220, 'cone');
+        this.createObstacles(330, 220, 'barrelRed');
+        this.createObstacles(270, 220, 'barrelRed');
+        this.createObstacles(210, 220, 'cone');
+        //this.createObstacles(150, 200, 'cone');
+        this.createObstacles(450, 380, 'barrelRed');
+        this.createObstacles(390, 380, 'cone');
+        this.createObstacles(330, 380, 'cone');
+        this.createObstacles(270, 380, 'barrelBlue');
+        this.createObstacles(210, 380, 'cone');
+        //this.createObstacles(150, 380, 'barrelRed');
+        this.world.bringToTop(this.obstacles);
+        this.world.bringToTop(this.sprite);
+    },
+    createCars: function(x, y, horizontal)
+    {
+        var car = this.add.sprite(x, y, 'cars', Math.floor(Math.random()*5));
+        
+        this.physics.enable(car, Phaser.Physics.ARCADE);
+        car.body.collideWorldBounds = true;
+	    car.body.checkCollision.up = false;
+	    car.body.checkCollision.down = false;
+	    car.body.immovable = true;
+        if(horizontal)
+        {
+            car.body.velocity.x = 100;
+        }
+        else
+        {
+            car.body.velocity.y = 100;
+        }
+        
+        this.cars.add(car);
+    },
+    createObstacles: function(x, y, ob)
+    {
+        var obstacle = this.add.sprite(x, y, ob);
+        
+        this.physics.enable(obstacle, Phaser.Physics.ARCADE);
+        obstacle.body.collideWorldBounds = true;
+	    obstacle.body.checkCollision.up = false;
+	    obstacle.body.checkCollision.down = false;
+	    obstacle.body.immovable = true;
+        
+        this.obstacles.add(obstacle);
+    },
+    reverseCar: function(obstacle, car)
+    {
+        if(car.body.velocity.x!= 0)
+        {
+            car.body.velocity.x=-car.body.velocity.x;
+        }
+        else if(car.body.velocity.y!= 0)
+        {
+            car.body.velocity.y=-car.body.velocity.y;
+        }
+    },
+    resetTruck: function(truck, obstacle)
+    {
+        truck.input.disableDrag();
+        truck.x = 100;
+        truck.y = 560;
+        truck.input.enableDrag(false);
+    },
+    crusher: function(truck, car)
+    {
+        car.body.velocity.x=0;
+        car.body.velocity.y=0;
+        car.loadTexture('carsCrushed', car._frame.index);
     },
     update: function ()
     {
-        this.physics.arcade.collide(this.sprite, this.grey, function()
-        {
-            this.grey.loadTexture('carsCrushed', 3);
-        }, null, this);
-        
-        if(!this.start && this.sprite.y >= 581)
-        {
-            this.sprite.body.velocity.x=0;
-            this.sprite.body.velocity.y=0;
-            this.start = true;
-        }
+        this.game.physics.arcade.collide(this.obstacles, this.cars, this.reverseCar, null, this); 
+        this.game.physics.arcade.overlap(this.sprite, this.obstacles, this.resetTruck, null, this); 
+        this.game.physics.arcade.overlap(this.sprite, this.cars, this.crusher, null, this); 
     }
 };
 /*Copyright (C) Wayside Co. - All Rights Reserved
