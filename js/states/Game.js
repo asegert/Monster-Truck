@@ -34,6 +34,12 @@ MonsterTruck.GameState = {
         this.createCars(80, 150, false);
         this.createCars(300, 100, true);
         this.createCars(400, 100, false);
+        
+        this.createCars(600,150, true);
+        this.createCars(580, 150, false);
+        this.createCars(800, 100, true);
+        this.createCars(720, 500, false);
+        
         this.world.bringToTop(this.cars);
         this.createObstacles(450, 270, 'oil');
         this.createObstacles(500, 20, 'raceRed');
@@ -53,7 +59,7 @@ MonsterTruck.GameState = {
         this.createBlockers(0, 0, true);
         this.createBlockers(960, 0, true);
         this.createBlockers(480, 0, true);
-        this.createBlockers(290, 270, null);//--mid 290
+        this.createBlockers(290, 270, null);
         
         this.world.bringToTop(this.obstacles);
         this.world.bringToTop(this.sprite);
