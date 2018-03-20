@@ -18,6 +18,8 @@ MonsterTruck.PreloadState = {
         this.load.image('gas', 'assets/images/gas.png');
         this.load.image('ramp', 'assets/images/ramp.png');
         this.load.image('ramp2', 'assets/images/ramp2.png');
+        this.load.image('blockerWidth', 'assets/images/blockerWidth.png');
+        this.load.image('blockerHeight', 'assets/images/blockerHeight.png');
         
         
         this.load.spritesheet('player', 'assets/images/player.png', 117, 59, 5);
