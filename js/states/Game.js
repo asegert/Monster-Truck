@@ -16,10 +16,8 @@ MonsterTruck.GameState = {
         this.ramp1=this.createRamps(290, 270, 'ramp');
         this.ramp2=this.createRamps(570, 270, 'ramp2');
         
-        this.sprite = this.add.sprite(100, 560, 'player');
-        this.sprite.animations.add('walk');
-
-        this.sprite.animations.play('walk', 5, true);
+        this.sprite = this.add.sprite(100, 550, 'player');
+        this.sprite.anchor.setTo(0.5, 0.5);
         
         this.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	    this.sprite.body.collideWorldBounds = true;
@@ -43,37 +41,19 @@ MonsterTruck.GameState = {
         this.createObstacles(500, 416, 'raceRed');
         this.createObstacles(500, 517, 'raceWhite');
         
-        //this.createObstacles(50, 50, 'cone');
-        //this.createObstacles(30, 500, 'cone');
-        //this.createObstacles(90, 500, 'barrelRed');
-        this.createObstacles(150, 500, 'barrelBlue');
-        //this.createObstacles(210, 500, 'barrelBlue');
-        //this.createObstacles(270, 500, 'barrelRed');
-        //this.createObstacles(330, 500, 'cone');
-        //this.createObstacles(30, 100, 'cone');
-        //this.createObstacles(90, 100, 'cone');
+        this.createObstacles(550, 50, 'cone');
+        this.createObstacles(100, 450, 'barrelBlue');
         this.createObstacles(150, 100, 'barrelRed');
-        //this.createObstacles(210, 100, 'cone');
-        //this.createObstacles(270, 100, 'barrelBlue');
-        //this.createObstacles(330, 100, 'cone');
-        //this.createObstacles(450, 220, 'barrelBlue');
-        //this.createObstacles(390, 220, 'cone');
-        //this.createObstacles(330, 220, 'barrelRed');
-        //this.createObstacles(270, 220, 'barrelRed');
-        //this.createObstacles(210, 220, 'cone');
-        //this.createObstacles(150, 200, 'cone');
-        //this.createObstacles(450, 380, 'barrelRed');
-        //this.createObstacles(390, 380, 'cone');
+        this.createObstacles(750, 150, 'barrelBlue');
         this.createObstacles(330, 380, 'cone');
-        //this.createObstacles(270, 380, 'barrelBlue');
-        //this.createObstacles(210, 380, 'cone');
-        //this.createObstacles(150, 380, 'barrelRed');
+        this.createObstacles(850, 480, 'barrelRed');
         
         this.createBlockers(0, 0, false);
         this.createBlockers(0, 640, false);
         this.createBlockers(0, 0, true);
         this.createBlockers(960, 0, true);
         this.createBlockers(480, 0, true);
+        this.createBlockers(290, 270, null);//--mid 290
         
         this.world.bringToTop(this.obstacles);
         this.world.bringToTop(this.sprite);
@@ -87,9 +67,13 @@ MonsterTruck.GameState = {
         {
             var block = this.add.sprite(x, y, 'blockerHeight');
         }
-        else
+        else if(height === false)
         {
             var block = this.add.sprite(x, y, 'blockerWidth');
+        }
+        else
+        {
+           var block = this.add.sprite(x, y, 'blockerMid');
         }
         this.physics.enable(block, Phaser.Physics.ARCADE);
         block.body.collideWorldBounds = true;
@@ -234,6 +218,7 @@ MonsterTruck.GameState = {
             if(ramp === this.ramp1)
             {
                 truck.body.enable = false;
+                truck.rotation = 0;
                 var firstTween = this.add.tween(truck).to({x: 300}, 1000, "Linear", true);
                 firstTween.onComplete.add(function()
                 {
@@ -241,11 +226,11 @@ MonsterTruck.GameState = {
                     var jumpTween = this.add.tween(this.sprite.scale).to({x: 1.5, y: 1.5}, 1000, "Linear", true);
                     jumpTween.onComplete.add(function()
                     {
-                        var flipTween = this.add.tween(truck).to({rotation: 3}, 1000, "Linear", true);
+                        var flipTween = this.add.tween(truck).to({rotation: 6.3}, 1000, "Linear", true);
                         flipTween.onComplete.add(function()
                         {
-                            this.add.tween(truck).to({rotation: 0}, 1000, "Linear", true);
-                            var fallTween = this.add.tween(truck.scale).to({x: -1, y: 1}, 1000, "Linear", true);
+                            //this.add.tween(truck).to({rotation: 0}, 1000, "Linear", true);
+                            var fallTween = this.add.tween(truck.scale).to({x: 1, y: 1}, 1000, "Linear", true);
                             fallTween.onComplete.add(function()
                             {
                                 var lastTween = this.add.tween(truck).to({x: 850}, 1000, "Linear", true);
@@ -264,28 +249,25 @@ MonsterTruck.GameState = {
             else if(ramp === this.ramp2)
             {
                 truck.body.enable = false;
+                truck.rotation = 3.1;
                 var firstTween = this.add.tween(truck).to({x: 600}, 1000, "Linear", true);
                 firstTween.onComplete.add(function()
                 {
-                    this.add.tween(truck).to({rotation: 3}, 1000, "Linear", true);
-                    var jumpTween = this.add.tween(truck.scale).to({x: 1.5, y: 1.5}, 1000, "Linear", true);
-                    jumpTween.onComplete.add(function()
+                    this.add.tween(truck.scale).to({x: 1.5, y: 1.5}, 1000, "Linear", true);
+                    this.add.tween(truck).to({x: 300}, 2000, "Linear", true);
+                    var flipTween = this.add.tween(truck).to({rotation: 9.4}, 1000, "Linear", true);
+                    flipTween.onComplete.add(function()
                     {
-                        var flipTween = this.add.tween(truck).to({rotation: 0}, 1000, "Linear", true);
-                        flipTween.onComplete.add(function()
+                        var fallTween = this.add.tween(truck.scale).to({x: 1, y: 1}, 1000, "Linear", true);
+                        fallTween.onComplete.add(function()
                         {
-                            this.add.tween(truck).to({x: 300}, 2000, "Linear", true);
-                            var fallTween = this.add.tween(truck.scale).to({x: 1, y: 1}, 1000, "Linear", true);
-                            fallTween.onComplete.add(function()
-                            {
-                                var lastTween = this.add.tween(truck).to({x: 100}, 1000, "Linear", true);
+                            var lastTween = this.add.tween(truck).to({x: 100}, 1000, "Linear", true);
                     
-                                lastTween.onComplete.add(function()
-                                {
-                                    this.onRamp = false;
-                                    truck.input.enableDrag(false);
-                                    truck.body.enable = true;
-                                }, this);
+                            lastTween.onComplete.add(function()
+                            {
+                                this.onRamp = false;
+                                truck.input.enableDrag(false);
+                                truck.body.enable = true;
                             }, this);
                         }, this);
                     }, this);
@@ -330,8 +312,8 @@ MonsterTruck.GameState = {
         {
             this.carsCrushed++;
             
-            this.left=this.add.sprite(-100, 500, 'player');
-            this.right=this.add.sprite(1060, 500, 'player');
+            this.left=this.add.sprite(-100, 500, 'monster');
+            this.right=this.add.sprite(1060, 500, 'monster');
             this.left.scale.setTo(5, 5);
             this.right.scale.setTo(-5, 5);
             this.left.anchor.setTo(0.1, 0.9);
@@ -345,6 +327,10 @@ MonsterTruck.GameState = {
                 this.add.tween(this.right).to({rotation: 0.9}, 1500, "Linear", true);
             }, this);
         }
+        if(!this.onRamp)
+        {
+            this.sprite.rotation = this.game.physics.arcade.angleToPointer(this.sprite);
+        } 
     }
 };
 /*Copyright (C) Wayside Co. - All Rights Reserved

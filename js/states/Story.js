@@ -32,7 +32,7 @@ MonsterTruck.StoryState = {
         this.add.image(0, 0, 'hill');
         this.physics.startSystem(Phaser.Physics.ARCADE);
         
-        this.sprite = this.add.sprite(160, 580, 'player');
+        this.sprite = this.add.sprite(160, 580, 'monster');
         this.sprite.animations.add('walk');
 
         this.sprite.animations.play('walk', 5, true);

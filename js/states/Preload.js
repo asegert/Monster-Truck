@@ -9,6 +9,8 @@ MonsterTruck.PreloadState = {
 
         this.load.image('logo', 'assets/images/main-logo.png');
         
+        this.load.image('player', 'assets/images/truck.png');
+        
         this.load.image('arena', 'assets/images/arena.png');
         this.load.image('hill', 'assets/images/hill.png');
         this.load.image('barrelBlue', 'assets/images/barrel_blue.png');
@@ -22,11 +24,10 @@ MonsterTruck.PreloadState = {
         this.load.image('ramp2', 'assets/images/ramp2.png');
         this.load.image('blockerWidth', 'assets/images/blockerWidth.png');
         this.load.image('blockerHeight', 'assets/images/blockerHeight.png');
+        this.load.image('blockerMid', 'assets/images/blockerMid.png');
         
         
-        this.load.spritesheet('player', 'assets/images/player.png', 117, 59, 5);
-        this.load.spritesheet('cars', 'assets/images/cars.png', 40, 60, 5);
-        this.load.spritesheet('carsCrushed', 'assets/images/carsCrushed.png', 40, 60, 5);
+        this.load.spritesheet('monster', 'assets/images/player.png', 117, 59, 5);
         
         
         this.load.spritesheet('carsUp', 'assets/images/carsUp.png', 60, 60, 3);
