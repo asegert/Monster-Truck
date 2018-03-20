@@ -326,9 +326,24 @@ MonsterTruck.GameState = {
         this.game.physics.arcade.collide(this.obstacles, this.cars, this.reverseCar, null, this); 
         this.game.physics.arcade.overlap(this.sprite, this.obstacles, this.resetTruck, null, this); 
         this.game.physics.arcade.overlap(this.sprite, this.cars, this.crusher, null, this); 
-        if(this.carsCrushed == this.cars.length)
+        if(this.carsCrushed === this.cars.length)
         {
-            console.log('Game Over');
+            this.carsCrushed++;
+            
+            this.left=this.add.sprite(-100, 500, 'player');
+            this.right=this.add.sprite(1060, 500, 'player');
+            this.left.scale.setTo(5, 5);
+            this.right.scale.setTo(-5, 5);
+            this.left.anchor.setTo(0.1, 0.9);
+            this.right.anchor.setTo(0.1, 0.9);
+        
+            this.add.tween(this.left).to({x: 205}, 2000, "Linear", true);
+            this.add.tween(this.right).to({x: 805}, 2000, "Linear", true);
+            this.time.events.add(Phaser.Timer.SECOND * 0.5, function()
+            {
+                this.add.tween(this.left).to({rotation: -0.9}, 1500, "Linear", true);
+                this.add.tween(this.right).to({rotation: 0.9}, 1500, "Linear", true);
+            }, this);
         }
     }
 };

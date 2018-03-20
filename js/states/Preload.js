@@ -7,6 +7,8 @@ MonsterTruck.PreloadState = {
         var preloadProgress = this.add.sprite((this.world.width - 540) * 0.5, (this.world.height + 170) * 0.5, 'loading-progress');
         this.load.setPreloadSprite(preloadProgress);
 
+        this.load.image('logo', 'assets/images/main-logo.png');
+        
         this.load.image('arena', 'assets/images/arena.png');
         this.load.image('hill', 'assets/images/hill.png');
         this.load.image('barrelBlue', 'assets/images/barrel_blue.png');
@@ -35,10 +37,16 @@ MonsterTruck.PreloadState = {
         this.load.spritesheet('carsCrushedDown', 'assets/images/carsCrushedDown.png', 60, 60, 3);
         this.load.spritesheet('carsCrushedLeft', 'assets/images/carsCrushedLeft.png', 60, 60, 3);
         this.load.spritesheet('carsCrushedRight', 'assets/images/carsCrushedRight.png', 60, 60, 3);
+        
+        this.load.video('gif', 'assets/video/gif.mp4');
+        this.load.video('gif1', 'assets/video/gif1.mp4');
+        this.load.video('gif2', 'assets/video/gif2.mp4');
+        this.load.video('gif3', 'assets/video/gif3.mp4');
+        this.load.video('gif4', 'assets/video/gif4.mp4');
     },
     create: function ()
     {
-        this.state.start('Story');
+        this.state.start('Game');
     }
 };
 /*Copyright (C) Wayside Co. - All Rights Reserved
