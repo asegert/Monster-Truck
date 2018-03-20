@@ -8,6 +8,7 @@ MonsterTruck.PreloadState = {
         this.load.setPreloadSprite(preloadProgress);
 
         this.load.image('logo', 'assets/images/main-logo.png');
+        this.load.image('story', 'assets/images/menu-background.jpg');
         
         this.load.image('player', 'assets/images/truck.png');
         
@@ -47,7 +48,7 @@ MonsterTruck.PreloadState = {
     },
     create: function ()
     {
-        this.state.start('Game');
+        this.state.start('Story');
     }
 };
 /*Copyright (C) Wayside Co. - All Rights Reserved

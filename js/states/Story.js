@@ -3,6 +3,8 @@ var MonsterTruck = MonsterTruck || {};
 MonsterTruck.StoryState = {
     create: function ()
     {
+        this.background = this.add.sprite(0, 0, 'story');
+        
         /*var g1 = this.add.video('gif');
         g1.play(true);
         g1.addToWorld(0, 0, 0.1, 0.1, 0.7, 0.7);
@@ -23,12 +25,12 @@ MonsterTruck.StoryState = {
         g5.play(true);
         g5.addToWorld(480, 320, 0.5, 0.5, 0.7, 0.7);
         
-        this.add.sprite(40, 0, 'logo');*/
+        this.add.sprite(40, 0, 'logo');
         
         //Enter the monster dome button
         
         
-        this.start = true;
+        */this.start = true;
         this.add.image(0, 0, 'hill');
         this.physics.startSystem(Phaser.Physics.ARCADE);
         
@@ -45,14 +47,14 @@ MonsterTruck.StoryState = {
         this.pedal.inputEnabled = true;
         this.pedal.events.onInputDown.add(function()
         {
-            this.sprite.body.velocity.x=60.5;
-            this.sprite.body.velocity.y=-50;
+            this.sprite.body.velocity.x=108.9;
+            this.sprite.body.velocity.y=-90;
         }, this);
         this.pedal.events.onInputUp.add(function()
         {
             this.start = false;
-            this.sprite.body.velocity.x=-60.5;
-            this.sprite.body.velocity.y=50;
+            this.sprite.body.velocity.x=-145.2;
+            this.sprite.body.velocity.y=120;
         }, this);
         
         this.sprite.angle=-40;
