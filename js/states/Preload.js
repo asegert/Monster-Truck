@@ -12,6 +12,11 @@ MonsterTruck.PreloadState = {
         
         this.load.image('player', 'assets/images/truck.png');
         
+        this.load.image('enemy1', 'assets/images/enemy1.png');
+        this.load.image('enemy2', 'assets/images/enemy2.png');
+        this.load.image('enemy3', 'assets/images/enemy3.png');
+        
+        this.load.image('battleArena', 'assets/images/battleArena.png');
         this.load.image('arena', 'assets/images/arena.png');
         this.load.image('hill', 'assets/images/hill.png');
         this.load.image('barrelBlue', 'assets/images/barrel_blue.png');
