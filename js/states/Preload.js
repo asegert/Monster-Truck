@@ -8,13 +8,14 @@ MonsterTruck.PreloadState = {
         this.load.setPreloadSprite(preloadProgress);
 
         this.load.image('logo', 'assets/images/main-logo.png');
+        this.load.image('mainButton', 'assets/images/main-start-button.png');
         this.load.image('story', 'assets/images/menu-background.jpg');
         
         this.load.image('player', 'assets/images/truck.png');
         
-        this.load.image('enemy1', 'assets/images/enemy1.png');
-        this.load.image('enemy2', 'assets/images/enemy2.png');
-        this.load.image('enemy3', 'assets/images/enemy3.png');
+        this.load.image('enemy1', 'assets/images/enemy-one-top.png');
+        this.load.image('enemy2', 'assets/images/enemy-two-top.png');
+        this.load.image('enemy3', 'assets/images/enemy-three-top.png');
         
         this.load.image('battleArena', 'assets/images/battleArena.png');
         this.load.image('arena', 'assets/images/arena.png');
