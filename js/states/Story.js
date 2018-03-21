@@ -48,22 +48,34 @@ MonsterTruck.StoryState = {
             this.sprite.animations.play('walk', 5, true);
         
             this.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-	       this.sprite.body.checkCollision.up = false;
-	       this.sprite.body.checkCollision.down = false;
+	        this.sprite.body.checkCollision.up = false;
+	        this.sprite.body.checkCollision.down = false;
 
-            this.pedal = this.add.sprite(600, 400, 'gas');
+            this.ins = this.add.sprite(0, 0, 'mainIns');
+            
+            this.pedal = this.add.sprite(700, 420, 'gas');
             this.pedal.inputEnabled = true;
             this.pedal.events.onInputDown.add(function()
             {
+                this.ins.alpha=0;
+                this.alertTween.pause();
+                this.alert.alpha=0;
                 this.sprite.body.velocity.x=108.9;
                 this.sprite.body.velocity.y=-90;
             }, this);
             this.pedal.events.onInputUp.add(function()
             {
+                this.ins.alpha=1;
+                this.alertTween.resume();
                 this.start = false;
                 this.sprite.body.velocity.x=-145.2;
                 this.sprite.body.velocity.y=120;
             }, this);
+            
+            this.alert = this.add.sprite(700, 350, 'alertMain');
+            this.alert.scale.setTo(0.5, 0.5);
+            this.alert.alpha=0;
+            this.alertTween = this.add.tween(this.alert).to( { alpha: 1 }, 1000, "Linear", true, 0, -1);
         
             this.sprite.angle=-40;
         }

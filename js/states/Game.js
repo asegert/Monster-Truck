@@ -444,8 +444,8 @@ MonsterTruck.GameState = {
                     if(enemy.key === 'enemy1')
                     {
                         this.currEnemy = 0;
-                        this.playerRotation = 0.1;
-                        this.enemyRotation = 0.15;
+                        this.playerRotation = 0;
+                        this.enemyRotation = 0;
                         this.battleArena = this.add.sprite(0, 0, 'battleArena');
                     
                         this.battlePlayer = this.add.sprite(250, 250, 'player');
@@ -454,17 +454,27 @@ MonsterTruck.GameState = {
                         this.battlePlayer.anchor.setTo(0.1, 0.5);
                         this.battleEnemy.anchor.setTo(0.1, 0.5);
                     
+                        this.ins = this.add.sprite(0, 0, 'battle1Ins');
+                        
                         this.gas = this.add.button(460, 400, 'gas', function()
                         {
-                            this.playerRotation+=0.01;
-                        }, this);
-                    
-                        this.time.events.repeat(Phaser.Timer.SECOND * 2, 10, function()
-                        {
-                            if(this.currEnemy === 1)
+                            if(this.ins!=undefined)
                             {
-                                this.enemyRotation+=0.05;
+                                this.ins.alpha=0;
+                                this.ins=undefined;
+                                
+                                this.playerRotation = 0.1;
+                                this.enemyRotation = 0.15;
+                                this.time.events.repeat(Phaser.Timer.SECOND * 2, 10, function()
+                                {
+                                    if(this.currEnemy === 1)
+                                    {
+                                        this.enemyRotation+=0.05;
+                                    }
+                                }, this);
                             }
+                            
+                            this.playerRotation+=0.01;
                         }, this);
                     }
                     //Round 2
@@ -496,15 +506,21 @@ MonsterTruck.GameState = {
                     
                         this.gas = this.add.button(460, 400, 'gas', function()
                         {
-                            this.battlePlayer.body.velocity.x+=20;
-                        }, this);
-                    
-                        this.time.events.repeat(Phaser.Timer.SECOND * 2, 10, function()
-                        {
-                            if(this.battleEnemy!= undefined || this.currEnemy === 1)
+                            if(this.ins!=undefined)
                             {
-                                this.battleEnemy.body.velocity.x-=20;
+                                this.ins.alpha=0;
+                                this.ins=undefined;
+                                
+                                this.time.events.repeat(Phaser.Timer.SECOND * 2, 10, function()
+                                {
+                                    if(this.battleEnemy!= undefined || this.currEnemy === 2)
+                                    {
+                                        this.battleEnemy.body.velocity.x-=20;
+                                    }
+                                }, this);
                             }
+                            
+                            this.battlePlayer.body.velocity.x+=20;
                         }, this);
                     }
                     //Round 3
