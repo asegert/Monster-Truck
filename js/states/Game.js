@@ -5,6 +5,7 @@ MonsterTruck.GameState = {
     {
         this.carsCrushed = 0;
         this.trucksCrushed = 0;
+        this.totalCrush = 0;
         this.speed = 0;
         this.playerRotation = 0;
         this.enemyRotation = 0;
@@ -416,6 +417,7 @@ MonsterTruck.GameState = {
             {
                 car.loadTexture('carsCrushedRight', car._frame.index);
             }
+            this.totalCrush++;
         }
     },
     startBattle: function(truck, enemy)
@@ -579,9 +581,9 @@ MonsterTruck.GameState = {
         this.game.physics.arcade.collide(this.obstacles, this.enemies, this.reverseEnemy, null, this); 
         this.game.physics.arcade.overlap(this.enemies, this.cars, this.crusher, null, this);
         this.game.physics.arcade.overlap(this.sprite, this.enemies, this.startBattle, null, this);
-        if(this.carsCrushed === this.cars.length)
+        if(this.totalCrush === (this.cars.length + this.enemies.length))
         {
-            this.carsCrushed++;
+            this.totalCrush++;
             
             this.left=this.add.sprite(-100, 500, 'monster');
             this.right=this.add.sprite(1060, 500, 'monster');
@@ -632,6 +634,7 @@ MonsterTruck.GameState = {
                     this.currEnemy = null;
                     this.trucksCrushed++;
                     this.battling = false;
+                    this.totalCrush++;
                 }
                 else if(this.battleEnemy.rotation > 100)
                 {
@@ -648,9 +651,6 @@ MonsterTruck.GameState = {
                     this.left = undefined;
                     this.right.destroy();
                     this.right = undefined;
-                    this.enemies.children[this.currEnemy].body.enable = false;
-                    this.enemies.children[this.currEnemy].body.velocity.x=0;
-                    this.enemies.children[this.currEnemy].body.velocity.y=0;
                     //change texture
                     this.currEnemy = null;
                     this.battling = false;
@@ -682,13 +682,14 @@ MonsterTruck.GameState = {
                     this.currEnemy = null;
                     this.trucksCrushed++;
                     this.battling = false;
+                    this.totalCrush++;
                 }, null, this);
             }
             //Round 3
             if((this.currEnemy+1)%3 === 0)
             {
                 this.cord.fromSprite(this.battlePlayer, this.battleEnemy, false);
-                this.game.physics.arcade.collide(this.enemyBlocker, this.battleEnemy, function()
+                this.game.physics.arcade.collide(this.battlePlayer, this.playerBlocker, function()
                 {
                     console.log('enemy wins');
                     this.battlePlayer.destroy();
@@ -712,8 +713,9 @@ MonsterTruck.GameState = {
                     this.currEnemy = null;
                     this.trucksCrushed++;
                     this.battling = false;
+                    this.totalCrush++;
                 }, null, this)
-                this.game.physics.arcade.collide(this.battlePlayer, this.playerBlocker, function()
+                this.game.physics.arcade.collide(this.enemyBlocker, this.battleEnemy, function()
                 {
                     console.log('player wins');
                     this.battlePlayer.destroy();
@@ -731,9 +733,6 @@ MonsterTruck.GameState = {
                     this.cord=undefined;
                     this.graphics.clear();
                     this.graphics = undefined;
-                    this.enemies.children[this.currEnemy].body.enable = false;
-                    this.enemies.children[this.currEnemy].body.velocity.x=0;
-                    this.enemies.children[this.currEnemy].body.velocity.y=0;
                     this.currEnemy = null;
                     this.battling = false;
                 }, null, this);
