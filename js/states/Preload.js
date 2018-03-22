@@ -56,6 +56,8 @@ MonsterTruck.PreloadState = {
         this.load.spritesheet('carsCrushedLeft', 'assets/images/carsCrushedLeft.png', 60, 60, 3);
         this.load.spritesheet('carsCrushedRight', 'assets/images/carsCrushedRight.png', 60, 60, 3);
         
+        this.load.text('monsterData', 'assets/data/monsterTruck.json');
+        
         this.load.audio('horn', ['assets/audio/stadiumHorn.mp3', 'assets/audio/stadiumHorn.m4a', 'assets/audio/stadiumHorn.ogg']);
         this.load.audio('sunday', ['assets/audio/Sunday.mp3', 'assets/audio/Sunday.m4a', 'assets/audio/Sunday.ogg']);
         this.load.audio('background', ['assets/audio/monsterTruckBackground.mp3', 'assets/audio/monsterTruckBackground.m4a', 'assets/audio/monsterTruckBackground.ogg']);

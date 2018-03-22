@@ -11,10 +11,11 @@ MonsterTruck.GameState = {
             MonsterTruck.audio.volume = 1;
         }, this);
         
+        this.allData = JSON.parse(this.game.cache.getText('monsterData'));
+        
         this.carsCrushed = 0;
         this.trucksCrushed = 0;
         this.totalCrush = 0;
-        this.speed = 0;
         this.playerRotation = 0;
         this.enemyRotation = 0;
         this.currEnemy = null;
@@ -28,10 +29,12 @@ MonsterTruck.GameState = {
         this.add.sprite(0, 0, 'arena');
         this.physics.startSystem(Phaser.Physics.ARCADE);
         
-        this.ramp1=this.createRamps(290, 270, 'ramp');
-        this.ramp2=this.createRamps(570, 270, 'ramp2');
         
-        this.sprite = this.add.sprite(100, 550, 'player');
+        
+        this.ramp1=this.createRamps(this.allData.ramp[0][0], this.allData.ramp[0][1], this.allData.ramp[0][2]);
+        this.ramp2=this.createRamps(this.allData.ramp[1][0], this.allData.ramp[1][1], this.allData.ramp[1][2]);
+        
+        this.sprite = this.add.sprite(this.allData.truckPos[0], this.allData.truckPos[1], 'player');
         this.sprite.anchor.setTo(0.5, 0.5);
         
         this.physics.enable(this.sprite, Phaser.Physics.ARCADE);
@@ -40,75 +43,41 @@ MonsterTruck.GameState = {
 	    this.sprite.body.checkCollision.down = false;
         
         this.sprite.inputEnabled = true;
-
-        // Make this item draggable.
         this.sprite.input.enableDrag(false);
-        //this.sprite.input.dragOffset = new Phaser.Point(-100, 100);
         
-        this.createCars(100,150, true);
-        this.createCars(80, 150, false);
-        this.createCars(300, 100, true);
-        this.createCars(400, 100, false);
+        for(let i=0, len=this.allData.cars.length; i<len; i++)
+        {
+            this.createCars(this.allData.cars[i][0], this.allData.cars[i][1], this.allData.cars[i][2]);
+        };
         
-        this.createCars(600,150, true);
-        this.createCars(580, 150, false);
-        this.createCars(800, 100, true);
-        this.createCars(720, 500, false);
+        for(let i=0, len=this.allData.obstacles.length; i<len; i++)
+        {
+            this.createObstacles(this.allData.obstacles[i][0], this.allData.obstacles[i][1], this.allData.obstacles[i][2]);
+        };
+        
+        for(let i=0, len=this.allData.blockers.length; i<len; i++)
+        {
+            this.createBlockers(this.allData.blockers[i][0], this.allData.blockers[i][1], this.allData.blockers[i][2]);
+        };
+        
+        for(let i=0, len=this.allData.enemies.length; i<len; i++)
+        {
+            this.createEnemies(this.allData.enemies[i][0], this.allData.enemies[i][1], this.allData.enemies[i][2], this.allData.enemies[i][3]);
+        };
         
         this.world.bringToTop(this.cars);
-        this.createObstacles(450, 270, 'oil');
-        this.createObstacles(500, 20, 'raceRed');
-        this.createObstacles(500, 121, 'raceWhite');
-        this.createObstacles(500, 416, 'raceRed');
-        this.createObstacles(500, 517, 'raceWhite');
-        
-        this.createObstacles(550, 50, 'cone');
-        this.createObstacles(100, 450, 'barrelBlue');
-        this.createObstacles(150, 100, 'barrelRed');
-        this.createObstacles(750, 150, 'barrelBlue');
-        this.createObstacles(330, 380, 'cone');
-        this.createObstacles(850, 450, 'barrelRed');
-        
-        this.createBlockers(0, 0, false);
-        this.createBlockers(0, 640, false);
-        this.createBlockers(0, 0, true);
-        this.createBlockers(960, 0, true);
-        this.createBlockers(480, 0, true);
-        this.createBlockers(290, 270, null);
-        
-        this.createEnemies(100, 40, 'enemy1', true);
-        this.createEnemies(780, 60, 'enemy2', false);
-        this.createEnemies(780, 500, 'enemy3', false);
-        
         this.world.bringToTop(this.obstacles);
         this.world.bringToTop(this.sprite);
         this.world.bringToTop(this.enemies);
         this.world.bringToTop(this.blockers);
         
-        this.scoreboard1 = this.add.sprite(195, 0, 'scoreboard');
-        this.scoreboard2 = this.add.sprite(220, 0, 'scoreboard');
-        this.scoreboard3 = this.add.sprite(245, 0, 'scoreboard');
-        this.scoreboard4 = this.add.sprite(270, 0, 'scoreboard');
-        this.scoreboard5 = this.add.sprite(295, 0, 'scoreboard');
-        this.scoreboard6 = this.add.sprite(320, 0, 'scoreboard');
-        this.scoreboard7 = this.add.sprite(345, 0, 'scoreboard');
-        this.scoreboard8 = this.add.sprite(370, 0, 'scoreboard');
-        this.scoreboard9 = this.add.sprite(395, 0, 'scoreboard');
+        for(let i=0, len=this.allData.scoreboards.length; i<len; i++)
+        {
+            this.add.sprite(this.allData.scoreboards[i][0], this.allData.scoreboards[i][1], 'scoreboard');
+        };
         
-        this.scoreboard10 = this.add.sprite(595, 0, 'scoreboard');
-        this.scoreboard11 = this.add.sprite(620, 0, 'scoreboard');
-        this.scoreboard12 = this.add.sprite(645, 0, 'scoreboard');
-        this.scoreboard13 = this.add.sprite(670, 0, 'scoreboard');
-        this.scoreboard14 = this.add.sprite(695, 0, 'scoreboard');
-        this.scoreboard15 = this.add.sprite(720, 0, 'scoreboard');
-        this.scoreboard16 = this.add.sprite(745, 0, 'scoreboard');
-        this.scoreboard17 = this.add.sprite(770, 0, 'scoreboard');
-        this.scoreboard18 = this.add.sprite(795, 0, 'scoreboard');
-        this.scoreboard19 = this.add.sprite(820, 0, 'scoreboard');
-        this.scoreboard20 = this.add.sprite(830, 0, 'scoreboard');
-        
-        this.scoreCars = this.add.text(200, 0, `Cars Crushed: ${this.carsCrushed}`, {fill: '#FFFFFF'});
-        this.scoreTrucks = this.add.text(600, 0, `Trucks Crushed: ${this.trucksCrushed}`, {fill: '#FFFFFF'});
+        this.scoreCars = this.add.text(this.allData.scoreText[0][0], this.allData.scoreText[0][1], `Cars Crushed: ${this.carsCrushed}`, {fill: '#FFFFFF'});
+        this.scoreTrucks = this.add.text(this.allData.scoreText[1][0], this.allData.scoreText[1][1], `Trucks Crushed: ${this.trucksCrushed}`, {fill: '#FFFFFF'});
         
         this.time.events.loop(Phaser.Timer.SECOND, this.changeDirection, this);
     },
@@ -147,11 +116,11 @@ MonsterTruck.GameState = {
         if(!stayTrue)
         {
             enemy.scale.setTo(-1, 1);
-            enemy.body.velocity.x = -100;
+            enemy.body.velocity.x = -this.allData.enemyVelocity;
         }
         else
         {
-            enemy.body.velocity.x = 100;
+            enemy.body.velocity.x = this.allData.enemyVelocity;
         }
         
         this.enemies.add(enemy);
@@ -166,7 +135,7 @@ MonsterTruck.GameState = {
 	        car.body.checkCollision.up = false;
 	        car.body.checkCollision.down = false;
 	        car.body.immovable = true;
-            car.body.velocity.x = 100;
+            car.body.velocity.x = this.allData.carVelocity;
         }
         else
         {
@@ -176,7 +145,7 @@ MonsterTruck.GameState = {
 	        car.body.checkCollision.up = false;
 	        car.body.checkCollision.down = false;
 	        car.body.immovable = true;
-            car.body.velocity.y = 100;
+            car.body.velocity.y = this.allData.carVelocity;
         }
         
         this.cars.add(car);
@@ -238,28 +207,10 @@ MonsterTruck.GameState = {
     {
         if(enemy.body.velocity.x!= 0)
         {
-            if(enemy.body.velocity.x > 0)
-            {
-                //enemy.loadTexture('carsRight', car._frame.index);
-            }
-            else
-            {
-                //enemy.loadTexture('carsLeft', car._frame.index);
-            }
-            
             enemy.body.velocity.x=-enemy.body.velocity.x;
         }
         else if(enemy.body.velocity.y!= 0)
-        {
-            if(enemy.body.velocity.y > 0)
-            {
-                //enemy.loadTexture('carsUp', car._frame.index);
-            }
-            else
-            {
-                //enemy.loadTexture('carsDown', car._frame.index);
-            }
-            
+        {  
             enemy.body.velocity.y=-enemy.body.velocity.y;
         }
     },
@@ -314,29 +265,11 @@ MonsterTruck.GameState = {
                 {
                     enemy.body.velocity.y=enemy.body.velocity.x;
                     enemy.body.velocity.x=0;
-                    
-                    if(enemy.body.velocity.y > 0)
-                    {
-                        //car.loadTexture('carsUp', car._frame.index);
-                    }
-                    else
-                    {
-                        //car.loadTexture('carsDown', car._frame.index);
-                    }
                 }
                 else if(enemy.body.velocity.y!= 0)
                 {
                     enemy.body.velocity.x=enemy.body.velocity.y;
                     enemy.body.velocity.y=0;
-                    
-                    if(enemy.body.velocity.x > 0)
-                    {
-                        //car.loadTexture('carsRight', car._frame.index);
-                    }
-                    else
-                    {
-                        //car.loadTexture('carsLeft', car._frame.index);
-                    }
                 }
             }
         }
@@ -344,8 +277,8 @@ MonsterTruck.GameState = {
     resetTruck: function(truck, obstacle)
     {
         truck.input.disableDrag();
-        truck.x = 100;
-        truck.y = 560;
+        truck.x = this.allData.truckPos[0];
+        truck.y = this.allData.truckPos[1];
         truck.input.enableDrag(false);
     },
     flipTruck: function(ramp, truck)
