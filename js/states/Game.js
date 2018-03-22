@@ -3,6 +3,14 @@ var MonsterTruck = MonsterTruck || {};
 MonsterTruck.GameState = {
     create: function ()
     {
+        MonsterTruck.audio.volume = 0.3;
+        var sound = this.add.audio('horn');
+        sound.play();
+        sound.onStop.add(function()
+        {
+            MonsterTruck.audio.volume = 1;
+        }, this);
+        
         this.carsCrushed = 0;
         this.trucksCrushed = 0;
         this.totalCrush = 0;
@@ -77,8 +85,30 @@ MonsterTruck.GameState = {
         this.world.bringToTop(this.enemies);
         this.world.bringToTop(this.blockers);
         
-        this.scoreCars = this.add.text(200, 0, `Cars Crushed: ${this.carsCrushed}`);
-        this.scoreTrucks = this.add.text(600, 0, `Trucks Crushed: ${this.trucksCrushed}`);
+        this.scoreboard1 = this.add.sprite(195, 0, 'scoreboard');
+        this.scoreboard2 = this.add.sprite(220, 0, 'scoreboard');
+        this.scoreboard3 = this.add.sprite(245, 0, 'scoreboard');
+        this.scoreboard4 = this.add.sprite(270, 0, 'scoreboard');
+        this.scoreboard5 = this.add.sprite(295, 0, 'scoreboard');
+        this.scoreboard6 = this.add.sprite(320, 0, 'scoreboard');
+        this.scoreboard7 = this.add.sprite(345, 0, 'scoreboard');
+        this.scoreboard8 = this.add.sprite(370, 0, 'scoreboard');
+        this.scoreboard9 = this.add.sprite(395, 0, 'scoreboard');
+        
+        this.scoreboard10 = this.add.sprite(595, 0, 'scoreboard');
+        this.scoreboard11 = this.add.sprite(620, 0, 'scoreboard');
+        this.scoreboard12 = this.add.sprite(645, 0, 'scoreboard');
+        this.scoreboard13 = this.add.sprite(670, 0, 'scoreboard');
+        this.scoreboard14 = this.add.sprite(695, 0, 'scoreboard');
+        this.scoreboard15 = this.add.sprite(720, 0, 'scoreboard');
+        this.scoreboard16 = this.add.sprite(745, 0, 'scoreboard');
+        this.scoreboard17 = this.add.sprite(770, 0, 'scoreboard');
+        this.scoreboard18 = this.add.sprite(795, 0, 'scoreboard');
+        this.scoreboard19 = this.add.sprite(820, 0, 'scoreboard');
+        this.scoreboard20 = this.add.sprite(830, 0, 'scoreboard');
+        
+        this.scoreCars = this.add.text(200, 0, `Cars Crushed: ${this.carsCrushed}`, {fill: '#FFFFFF'});
+        this.scoreTrucks = this.add.text(600, 0, `Trucks Crushed: ${this.trucksCrushed}`, {fill: '#FFFFFF'});
         
         this.time.events.loop(Phaser.Timer.SECOND, this.changeDirection, this);
     },
@@ -424,13 +454,22 @@ MonsterTruck.GameState = {
     {
         if(!this.battling)
         {
+            MonsterTruck.audio.volume = 0.3;
+            var sound = this.add.audio('horn');
+            sound.play();
+            sound.onStop.add(function()
+            {
+                MonsterTruck.audio.volume = 1;
+            }, this);
+            
             this.battling = true;
-            this.left=this.add.sprite(-100, 500, 'monster');
-            this.right=this.add.sprite(1060, 500, 'monster');
-            this.left.scale.setTo(5, 5);
-            this.right.scale.setTo(-5, 5);
-            this.left.anchor.setTo(0.1, 0.9);
-            this.right.anchor.setTo(0.1, 0.9);
+            
+            
+            this.left=this.add.sprite(-600, 600, 'battleTruck');
+            this.right=this.add.sprite(1560, 600, 'battleTruck');
+            this.left.scale.setTo(-1, 1);
+            this.left.anchor.setTo(0.9, 0.9);
+            this.right.anchor.setTo(0.9, 0.9);
         
             this.add.tween(this.left).to({x: 205}, 2000, "Linear", true);
             this.add.tween(this.right).to({x: 805}, 2000, "Linear", true);
@@ -610,19 +649,22 @@ MonsterTruck.GameState = {
         {
             this.totalCrush++;
             
-            this.left=this.add.sprite(-100, 500, 'monster');
-            this.right=this.add.sprite(1060, 500, 'monster');
-            this.left.scale.setTo(5, 5);
-            this.right.scale.setTo(-5, 5);
-            this.left.anchor.setTo(0.1, 0.9);
-            this.right.anchor.setTo(0.1, 0.9);
+            this.left=this.add.sprite(-600, 600, 'battleTruck');
+            this.right=this.add.sprite(1560, 600, 'battleTruck');
+            this.left.scale.setTo(-1, 1);
+            this.left.anchor.setTo(0.9, 0.9);
+            this.right.anchor.setTo(0.9, 0.9);
         
             this.add.tween(this.left).to({x: 205}, 2000, "Linear", true);
             this.add.tween(this.right).to({x: 805}, 2000, "Linear", true);
             this.time.events.add(Phaser.Timer.SECOND * 0.5, function()
             {
                 this.add.tween(this.left).to({rotation: -0.9}, 1500, "Linear", true);
-                this.add.tween(this.right).to({rotation: 0.9}, 1500, "Linear", true);
+                var endTween = this.add.tween(this.right).to({rotation: 0.9}, 1500, "Linear", true);
+                endTween.onComplete.add(function()
+                {
+                    this.state.start('End');
+                }, this);
             }, this);
         }
         if(!this.onRamp)

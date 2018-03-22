@@ -11,6 +11,8 @@ MonsterTruck.PreloadState = {
         this.load.image('mainButton', 'assets/images/main-start-button.png');
         this.load.image('story', 'assets/images/menu-background.jpg');
         this.load.image('alertMain', 'assets/images/press-the-pedal.png');
+        this.load.image('coupon', 'assets/images/monsterTruck_coupon.jpg');
+        this.load.image('scoreboard', 'assets/images/scoreboard.png');
         
         this.load.image('mainIns', 'assets/images/menu-instructions.png');
         this.load.image('battle1Ins', 'assets/images/battle1-instructions.png');
@@ -19,6 +21,7 @@ MonsterTruck.PreloadState = {
         
         
         this.load.image('player', 'assets/images/truck.png');
+        this.load.image('battleTruck', 'assets/images/battle-trigger-truck.png');
         
         this.load.image('enemy1', 'assets/images/enemy-one-top.png');
         this.load.image('enemy2', 'assets/images/enemy-two-top.png');
@@ -53,6 +56,10 @@ MonsterTruck.PreloadState = {
         this.load.spritesheet('carsCrushedLeft', 'assets/images/carsCrushedLeft.png', 60, 60, 3);
         this.load.spritesheet('carsCrushedRight', 'assets/images/carsCrushedRight.png', 60, 60, 3);
         
+        this.load.audio('horn', ['assets/audio/stadiumHorn.mp3', 'assets/audio/stadiumHorn.m4a', 'assets/audio/stadiumHorn.ogg']);
+        this.load.audio('sunday', ['assets/audio/Sunday.mp3', 'assets/audio/Sunday.m4a', 'assets/audio/Sunday.ogg']);
+        this.load.audio('background', ['assets/audio/monsterTruckBackground.mp3', 'assets/audio/monsterTruckBackground.m4a', 'assets/audio/monsterTruckBackground.ogg']);
+        
         this.load.video('gif', 'assets/video/gif.mp4');
         this.load.video('gif1', 'assets/video/gif1.mp4');
         this.load.video('gif2', 'assets/video/gif2.mp4');
@@ -61,7 +68,7 @@ MonsterTruck.PreloadState = {
     },
     create: function ()
     {
-        this.state.start('Game');
+        this.state.start('Story');
     }
 };
 /*Copyright (C) Wayside Co. - All Rights Reserved

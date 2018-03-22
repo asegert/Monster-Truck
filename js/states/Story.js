@@ -7,6 +7,16 @@ MonsterTruck.StoryState = {
         
         if(MonsterTruck.Climb === undefined)
         {
+            MonsterTruck.audio = this.add.audio('background');
+            MonsterTruck.audio.play('', 0, 1, true);
+            MonsterTruck.audio.volume = 0.3;
+            var sound = this.add.audio('sunday');
+            sound.play();
+            sound.onStop.add(function()
+            {
+                MonsterTruck.audio.volume = 1;
+            }, this);
+            
             var g1 = this.add.video('gif');
             g1.play(true);
             g1.addToWorld(0, 0, 0.1, 0.1, 0.7, 0.7);
@@ -53,11 +63,14 @@ MonsterTruck.StoryState = {
 
             this.ins = this.add.sprite(0, 0, 'mainIns');
             
-            this.pedal = this.add.sprite(700, 420, 'gas');
+            this.pedal = this.add.sprite(750, 530, 'gas');
+            this.pedal.anchor.setTo(0.5, 0.5);
             this.pedal.inputEnabled = true;
             this.pedal.events.onInputDown.add(function()
             {
                 this.ins.alpha=0;
+                this.pedal.alpha=0.8;
+                this.pedal.rotation = -0.2;
                 this.alertTween.pause();
                 this.alert.alpha=0;
                 this.sprite.body.velocity.x=108.9;
@@ -66,6 +79,8 @@ MonsterTruck.StoryState = {
             this.pedal.events.onInputUp.add(function()
             {
                 this.ins.alpha=1;
+                this.pedal.alpha=1;
+                this.pedal.rotation = 0;
                 this.alertTween.resume();
                 this.start = false;
                 this.sprite.body.velocity.x=-145.2;
