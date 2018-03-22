@@ -503,6 +503,8 @@ MonsterTruck.GameState = {
                         this.battlePlayer.anchor.setTo(0.1, 0.5);
                         this.battleEnemy.anchor.setTo(0.1, 0.5);
                         this.battleEnemy.scale.setTo(-1, 1);
+                        
+                        this.ins = this.add.sprite(0, 0, 'battle2Ins');
                     
                         this.gas = this.add.button(460, 400, 'gas', function()
                         {
@@ -563,18 +565,25 @@ MonsterTruck.GameState = {
 	                    this.playerBlocker.body.checkCollision.up = false;
                         this.playerBlocker.body.checkCollision.down = false;
                         this.playerBlocker.body.immovable = true;
+                        
+                        this.ins = this.add.sprite(0, 0, 'battle3Ins');
                     
                         this.gas = this.add.button(460, 400, 'gas', function()
                         {
-                            this.battlePlayer.body.velocity.x+=5
-                        }, this);
-                    
-                        this.time.events.repeat(Phaser.Timer.SECOND * 2, 10, function()
-                        {
-                            if(this.battleEnemy!= undefined || this.currEnemy === 2)
+                            if(this.ins!=undefined)
                             {
-                                this.battleEnemy.body.velocity.x-=5;
+                                this.ins.alpha=0;
+                                this.ins=undefined;
+                                
+                                this.time.events.repeat(Phaser.Timer.SECOND * 2, 10, function()
+                                {
+                                    if(this.battleEnemy!= undefined || this.currEnemy === 2)
+                                    {
+                                        this.battleEnemy.body.velocity.x-=5;
+                                    }
+                                }, this);
                             }
+                            this.battlePlayer.body.velocity.x+=5;
                         }, this);
                     }
                 }, this);
