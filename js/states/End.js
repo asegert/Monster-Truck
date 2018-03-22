@@ -3,8 +3,9 @@ var MonsterTruck = MonsterTruck || {};
 MonsterTruck.EndState = {
     create: function ()
     {
+        //Background
         this.background = this.add.sprite(0, 0, 'story');
-        
+        //Videos
         var g1 = this.add.video('gif');
         g1.play(true);
         g1.addToWorld(this.world.centerX-40, this.world.centerY-30, 0.9, 0.9, 0.67, 0.7);
@@ -20,9 +21,8 @@ MonsterTruck.EndState = {
         var g4 = this.add.video('gif1');
         g4.play(true);
         g4.addToWorld(this.world.centerX+70, this.world.centerY+45, 0.1, 0.1, 0.932, 0.9856);
-    
-        //this.add.sprite(this.world.centerX, this.world.centerY, 'cone');
-        
+
+        //Coupon
         var coupon=this.add.sprite(this.world.centerX+15, this.world.centerY+10, 'coupon');
         coupon.anchor.setTo(0.5, 0.5);
         coupon.scale.setTo(0.005, 0.005);

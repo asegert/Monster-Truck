@@ -3,10 +3,12 @@ var MonsterTruck = MonsterTruck || {};
 MonsterTruck.StoryState = {
     create: function ()
     {
+        //Background for both story screens
         this.background = this.add.sprite(0, 0, 'story');
-        
+        //If the player should not be entering the dome
         if(MonsterTruck.Climb === undefined)
         {
+            //Audio
             MonsterTruck.audio = this.add.audio('background');
             MonsterTruck.audio.play('', 0, 1, true);
             MonsterTruck.audio.volume = 0.3;
@@ -16,7 +18,7 @@ MonsterTruck.StoryState = {
             {
                 MonsterTruck.audio.volume = 1;
             }, this);
-            
+            //Video
             var g1 = this.add.video('gif');
             g1.play(true);
             g1.addToWorld(0, 0, 0.1, 0.1, 0.7, 0.7);
@@ -37,6 +39,7 @@ MonsterTruck.StoryState = {
             g5.play(true);
             g5.addToWorld(480, 320, 0.5, 0.5, 0.7, 0.7);
         
+            //Logo
             this.add.sprite(40, 0, 'logo');
         
             //Enter the monster dome button
@@ -46,12 +49,15 @@ MonsterTruck.StoryState = {
                 this.state.start('Story');
             }, this);
         }
+        //If player should be 'entering the dome'
         else
         {
+            //Boolean to track whether the climb has begun or not
             this.start = true;
+            //Hill to climb
             this.add.image(0, 0, 'hill');
             this.physics.startSystem(Phaser.Physics.ARCADE);
-        
+            //Truck to climb up
             this.sprite = this.add.sprite(160, 580, 'monster');
             this.sprite.animations.add('walk');
 
@@ -60,43 +66,51 @@ MonsterTruck.StoryState = {
             this.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	        this.sprite.body.checkCollision.up = false;
 	        this.sprite.body.checkCollision.down = false;
-
+            //Instructions
             this.ins = this.add.sprite(0, 0, 'mainIns');
-            
+            //Gas pedal to 'fuel' the car on it's climb
             this.pedal = this.add.sprite(750, 530, 'gas');
             this.pedal.anchor.setTo(0.5, 0.5);
             this.pedal.inputEnabled = true;
             this.pedal.events.onInputDown.add(function()
             {
+                //Remove the instructions
                 this.ins.alpha=0;
+                //Show that pedal is active
                 this.pedal.alpha=0.8;
                 this.pedal.rotation = -0.2;
+                //Pause the flashing text
                 this.alertTween.pause();
                 this.alert.alpha=0;
-                this.sprite.body.velocity.x=108.9;
-                this.sprite.body.velocity.y=-90;
+                //Move the car
+                this.sprite.body.velocity.x=217.8;
+                this.sprite.body.velocity.y=-180;
             }, this);
             this.pedal.events.onInputUp.add(function()
             {
+                //Add the instructions back
                 this.ins.alpha=1;
+                //Resume previous pedal and text
                 this.pedal.alpha=1;
                 this.pedal.rotation = 0;
                 this.alertTween.resume();
                 this.start = false;
-                this.sprite.body.velocity.x=-145.2;
-                this.sprite.body.velocity.y=120;
+                //Reverse velocity so truck 'falls downhill'
+                this.sprite.body.velocity.x=-242;
+                this.sprite.body.velocity.y=200;
             }, this);
-            
+            //Alert to hit the gas
             this.alert = this.add.sprite(700, 350, 'alertMain');
             this.alert.scale.setTo(0.5, 0.5);
             this.alert.alpha=0;
             this.alertTween = this.add.tween(this.alert).to( { alpha: 1 }, 1000, "Linear", true, 0, -1);
-        
+            //Angle the truck travels on the hill
             this.sprite.angle=-40;
         }
     },
     update: function ()
     {
+        //Checks that the truck has not hit the top or bottom of the hill and reacts accordingly if so
         if(MonsterTruck.Climb)
         {
             if(!this.start && this.sprite.y >= 581)

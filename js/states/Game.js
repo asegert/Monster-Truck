@@ -3,6 +3,7 @@ var MonsterTruck = MonsterTruck || {};
 MonsterTruck.GameState = {
     create: function ()
     {
+        //Adds horn sound
         MonsterTruck.audio.volume = 0.3;
         var sound = this.add.audio('horn');
         sound.play();
@@ -10,79 +11,88 @@ MonsterTruck.GameState = {
         {
             MonsterTruck.audio.volume = 1;
         }, this);
-        
+        //Get variable values
         this.allData = JSON.parse(this.game.cache.getText('monsterData'));
-        
+        //Counts the number of cars crushed by the player
         this.carsCrushed = 0;
+        //Counts the number of trucks crushed by the player
         this.trucksCrushed = 0;
+        //Total vehicles crushed by ALL trucks -> when all are crushed game ends
         this.totalCrush = 0;
+        //Stores the rotation of the player and enemy for battle 1
         this.playerRotation = 0;
         this.enemyRotation = 0;
+        //Stores the current enemy being battled
         this.currEnemy = null;
-        this.start = true;
+        //Boolean for whether or not a battle is occuring
         this.battling = false;
+        //Boolean for whether or not a battle is ending
+        this.ending = false;
+        //Boolean for whether or not the truck is on a ramp
         this.onRamp = false;
+        //Groups
         this.cars = this.add.group();
         this.enemies = this.add.group();
         this.obstacles = this.add.group();
         this.blockers = this.add.group();
+        //Create the arena
         this.add.sprite(0, 0, 'arena');
+        //Start physics
         this.physics.startSystem(Phaser.Physics.ARCADE);
-        
-        
-        
+        //Build the ramps
         this.ramp1=this.createRamps(this.allData.ramp[0][0], this.allData.ramp[0][1], this.allData.ramp[0][2]);
         this.ramp2=this.createRamps(this.allData.ramp[1][0], this.allData.ramp[1][1], this.allData.ramp[1][2]);
-        
+        //Create the player
         this.sprite = this.add.sprite(this.allData.truckPos[0], this.allData.truckPos[1], 'player');
         this.sprite.anchor.setTo(0.5, 0.5);
-        
+        //Add physics
         this.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	    this.sprite.body.collideWorldBounds = true;
         this.sprite.body.checkCollision.up = false;
 	    this.sprite.body.checkCollision.down = false;
-        
+        //Allow input on the player
         this.sprite.inputEnabled = true;
         this.sprite.input.enableDrag(false);
-        
+        //Create the cars
         for(let i=0, len=this.allData.cars.length; i<len; i++)
         {
             this.createCars(this.allData.cars[i][0], this.allData.cars[i][1], this.allData.cars[i][2]);
         };
-        
+        //Create the obstacles
         for(let i=0, len=this.allData.obstacles.length; i<len; i++)
         {
             this.createObstacles(this.allData.obstacles[i][0], this.allData.obstacles[i][1], this.allData.obstacles[i][2]);
         };
-        
+        //Create the blockers
         for(let i=0, len=this.allData.blockers.length; i<len; i++)
         {
             this.createBlockers(this.allData.blockers[i][0], this.allData.blockers[i][1], this.allData.blockers[i][2]);
         };
-        
+        //Create the enemies
         for(let i=0, len=this.allData.enemies.length; i<len; i++)
         {
             this.createEnemies(this.allData.enemies[i][0], this.allData.enemies[i][1], this.allData.enemies[i][2], this.allData.enemies[i][3]);
         };
-        
-        this.world.bringToTop(this.cars);
+        //Bring all items up
         this.world.bringToTop(this.obstacles);
+        this.world.bringToTop(this.cars);
         this.world.bringToTop(this.sprite);
         this.world.bringToTop(this.enemies);
         this.world.bringToTop(this.blockers);
-        
+        //Create the score board
         for(let i=0, len=this.allData.scoreboards.length; i<len; i++)
         {
             this.add.sprite(this.allData.scoreboards[i][0], this.allData.scoreboards[i][1], 'scoreboard');
         };
-        
+        //Add text to the scoreboard
         this.scoreCars = this.add.text(this.allData.scoreText[0][0], this.allData.scoreText[0][1], `Cars Crushed: ${this.carsCrushed}`, {fill: '#FFFFFF'});
         this.scoreTrucks = this.add.text(this.allData.scoreText[1][0], this.allData.scoreText[1][1], `Trucks Crushed: ${this.trucksCrushed}`, {fill: '#FFFFFF'});
-        
+        //Change direction evey second
         this.time.events.loop(Phaser.Timer.SECOND, this.changeDirection, this);
     },
     createBlockers: function(x, y, height)
     {
+        //Choosees which type of blocker should be used
         if(height)
         {
             var block = this.add.sprite(x, y, 'blockerHeight');
@@ -95,24 +105,26 @@ MonsterTruck.GameState = {
         {
            var block = this.add.sprite(x, y, 'blockerMid');
         }
+        //Add physics
         this.physics.enable(block, Phaser.Physics.ARCADE);
         block.body.collideWorldBounds = true;
 	    block.body.checkCollision.up = false;
 	    block.body.checkCollision.down = false;
 	    block.body.immovable = true;
-        
+        //Add to group
         this.blockers.add(block);
     },
     createEnemies: function(x, y, enemy, stayTrue)
     {
+        //Add enemy
         var enemy = this.add.sprite(x, y, enemy);
-        
+        //Add physics
         this.physics.enable(enemy, Phaser.Physics.ARCADE);
         enemy.body.collideWorldBounds = true;
 	    enemy.body.checkCollision.up = false;
 	    enemy.body.checkCollision.down = false;
 	    enemy.body.immovable = true;
-        
+        //If the enemy does not stay true to its direction reverse
         if(!stayTrue)
         {
             enemy.scale.setTo(-1, 1);
@@ -122,11 +134,12 @@ MonsterTruck.GameState = {
         {
             enemy.body.velocity.x = this.allData.enemyVelocity;
         }
-        
+        //Add to group
         this.enemies.add(enemy);
     },
     createCars: function(x, y, horizontal)
     {
+        //If the cars should start horizontal or vertical
         if(horizontal)
         {
             var car = this.add.sprite(x, y, 'carsRight', Math.floor(Math.random()*5));
@@ -152,6 +165,7 @@ MonsterTruck.GameState = {
     },
     createObstacles: function(x, y, ob)
     {
+        //Create the obstacles
         var obstacle = this.add.sprite(x, y, ob);
         
         this.physics.enable(obstacle, Phaser.Physics.ARCADE);
@@ -171,11 +185,12 @@ MonsterTruck.GameState = {
 	    newRamp.body.checkCollision.up = false;
 	    newRamp.body.checkCollision.down = false;
 	    newRamp.body.immovable = true;
-        
+        //Return the ramp -> no group
         return newRamp;
     },
     reverseCar: function(obstacle, car)
     {
+        //Check if the car is moving along the x or y axis, then flip along that axis
         if(car.body.velocity.x!= 0)
         {
             if(car.body.velocity.x > 0)
@@ -205,6 +220,7 @@ MonsterTruck.GameState = {
     },
     reverseEnemy: function(obstacle, enemy)
     {
+        //Reverse direction of the enemy
         if(enemy.body.velocity.x!= 0)
         {
             enemy.body.velocity.x=-enemy.body.velocity.x;
@@ -218,8 +234,9 @@ MonsterTruck.GameState = {
     {
         for(var i=0, len=this.cars.length; i<len; i++)
         {
+            //Chose a random number between 0 and 10
             var rand = Math.floor(Math.random() * 10);
-            
+            //If on the lower half change the direction -> appears more random
             if(rand < 5)
             {
                 var car=this.cars.children[i];
@@ -276,6 +293,7 @@ MonsterTruck.GameState = {
     },
     resetTruck: function(truck, obstacle)
     {
+        //Do not allow dragging, reset to original position and allow dragging
         truck.input.disableDrag();
         truck.x = this.allData.truckPos[0];
         truck.y = this.allData.truckPos[1];
@@ -283,11 +301,13 @@ MonsterTruck.GameState = {
     },
     flipTruck: function(ramp, truck)
     {
+        //Check that the truck is on a ramp
         if(this.onRamp === false)
         {
+            //Set it to on a ramp and disable drag
             this.onRamp = true;
             truck.input.disableDrag();
-        
+            //If the ramp is the first one move to the other side with a spin
             if(ramp === this.ramp1)
             {
                 truck.body.enable = false;
@@ -302,7 +322,6 @@ MonsterTruck.GameState = {
                         var flipTween = this.add.tween(truck).to({rotation: 6.3}, 1000, "Linear", true);
                         flipTween.onComplete.add(function()
                         {
-                            //this.add.tween(truck).to({rotation: 0}, 1000, "Linear", true);
                             var fallTween = this.add.tween(truck.scale).to({x: 1, y: 1}, 1000, "Linear", true);
                             fallTween.onComplete.add(function()
                             {
@@ -350,20 +369,20 @@ MonsterTruck.GameState = {
     },
     crusher: function(truck, car)
     {
+        //If there is not a battle happening(therefore nothing should be crushed and both the truck and car are active)
         if(!this.battling && car.body.enable && truck.body.enable)
         {
+            //Disable the car
             car.body.enable = false;
-            console.log(truck.key);
+            //If the player hit increase the score
             if(truck.key === 'player')
             {
                 this.carsCrushed++;
             }
-            else
-            {
-                console.log('enemy');
-            }
+            //Stop the cars movement
             car.body.velocity.x=0;
             car.body.velocity.y=0;
+            //Change the texture to the crushed texture
             if(car.key === 'carsUp')
             {
                 car.loadTexture('carsCrushedUp', car._frame.index);
@@ -380,11 +399,13 @@ MonsterTruck.GameState = {
             {
                 car.loadTexture('carsCrushedRight', car._frame.index);
             }
+            //Increase the total crush
             this.totalCrush++;
         }
     },
     startBattle: function(truck, enemy)
     {
+        //If a battle is not in progress begin one
         if(!this.battling)
         {
             MonsterTruck.audio.volume = 0.3;
@@ -396,8 +417,7 @@ MonsterTruck.GameState = {
             }, this);
             
             this.battling = true;
-            
-            
+            //Enter the battle animation
             this.left=this.add.sprite(-600, 600, 'battleTruck');
             this.right=this.add.sprite(1560, 600, 'battleTruck');
             this.left.scale.setTo(-1, 1);
@@ -415,6 +435,7 @@ MonsterTruck.GameState = {
                     //Round 1
                     if(enemy.key === 'enemy1')
                     {
+                        //Out rotate the opponent
                         this.currEnemy = 0;
                         this.playerRotation = 0;
                         this.enemyRotation = 0;
@@ -452,6 +473,7 @@ MonsterTruck.GameState = {
                     //Round 2
                     else if(enemy.key === 'enemy2')
                     {
+                        //Crash into the opponent
                         this.currEnemy = 1;
                         this.battleArena = this.add.sprite(0, 0, 'battleArena');
                     
@@ -500,6 +522,7 @@ MonsterTruck.GameState = {
                     //Round 3
                     else
                     {
+                        //Pull away from the opponent
                         this.currEnemy = 2;
                         this.battleArena = this.add.sprite(0, 0, 'battleArena');
                     
@@ -549,7 +572,7 @@ MonsterTruck.GameState = {
                                 
                                 this.time.events.repeat(Phaser.Timer.SECOND * 2, 10, function()
                                 {
-                                    if(this.battleEnemy!= undefined || this.currEnemy === 2)
+                                    if(this.battleEnemy!= undefined && this.currEnemy === 2 && this.battleEnemy.body!=null)
                                     {
                                         this.battleEnemy.body.velocity.x-=5;
                                     }
@@ -564,9 +587,10 @@ MonsterTruck.GameState = {
     },
     update: function ()
     {
+        //Update the scores
         this.scoreCars.setText(`Cars Crushed: ${this.carsCrushed}`);
         this.scoreTrucks.setText(`Trucks Crushed: ${this.trucksCrushed}`);
-        
+        //Check for collisions and overlaps
         this.game.physics.arcade.collide(this.ramp1, this.sprite, this.flipTruck, null, this);
         this.game.physics.arcade.collide(this.ramp2, this.sprite, this.flipTruck, null, this);
         this.game.physics.arcade.collide(this.blockers, this.cars, this.reverseCar, null, this);
@@ -578,10 +602,11 @@ MonsterTruck.GameState = {
         this.game.physics.arcade.collide(this.obstacles, this.enemies, this.reverseEnemy, null, this); 
         this.game.physics.arcade.overlap(this.enemies, this.cars, this.crusher, null, this);
         this.game.physics.arcade.overlap(this.sprite, this.enemies, this.startBattle, null, this);
+        //Check if game should end
         if(this.totalCrush === (this.cars.length + this.enemies.length))
         {
             this.totalCrush++;
-            
+            //Show animation and go to end screen
             this.left=this.add.sprite(-600, 600, 'battleTruck');
             this.right=this.add.sprite(1560, 600, 'battleTruck');
             this.left.scale.setTo(-1, 1);
@@ -600,10 +625,12 @@ MonsterTruck.GameState = {
                 }, this);
             }, this);
         }
+        //Update the rotation of the truck
         if(!this.onRamp)
         {
             this.sprite.rotation = this.game.physics.arcade.angleToPointer(this.sprite);
         } 
+        //If a battle is active update accordingly
         if(this.battling && this.battleEnemy != undefined)
         {
             //Round 1
@@ -611,34 +638,43 @@ MonsterTruck.GameState = {
             {
                 this.battlePlayer.rotation += this.playerRotation;
                 this.battleEnemy.rotation += this.enemyRotation;
-            
-                if(this.battlePlayer.rotation > this.battleEnemy.rotation)
+                //If the battle is over clear the battle
+                if(this.battlePlayer.rotation > this.battleEnemy.rotation && !this.ending)
                 {
-                    console.log('player wins');
-                    this.battlePlayer.destroy();
-                    this.battlePlayer = undefined;
-                    this.battleEnemy.destroy();
-                    this.battleEnemy = undefined;
-                    this.gas.destroy();
-                    this.gas = undefined;
-                    this.battleArena.destroy();
-                    this.battleArena = undefined;
-                    this.left.destroy();
-                    this.left = undefined;
-                    this.right.destroy();
-                    this.right = undefined;
-                    this.enemies.children[this.currEnemy].body.enable = false;
-                    this.enemies.children[this.currEnemy].body.velocity.x=0;
-                    this.enemies.children[this.currEnemy].body.velocity.y=0;
-                    //change texture
-                    this.currEnemy = null;
-                    this.trucksCrushed++;
-                    this.battling = false;
-                    this.totalCrush++;
+                    this.ending = true;
+                    var win = this.add.sprite(480, 100, 'winner');
+                    win.scale.setTo(0.1, 0.1);
+                    win.anchor.setTo(0.5, 0.5);
+                    var winTween = this.add.tween(win.scale).to({x: 1, y: 1}, 2000, "Linear", true);
+                    winTween.onComplete.add(function()
+                    {
+                        this.battlePlayer.destroy();
+                        this.battlePlayer = undefined;
+                        this.battleEnemy.destroy();
+                        this.battleEnemy = undefined;
+                        this.gas.destroy();
+                        this.gas = undefined;
+                        this.battleArena.destroy();
+                        this.battleArena = undefined;
+                        this.left.destroy();
+                        this.left = undefined;
+                        this.right.destroy();
+                        this.right = undefined;
+                        this.enemies.children[this.currEnemy].body.enable = false;
+                        this.enemies.children[this.currEnemy].body.velocity.x=0;
+                        this.enemies.children[this.currEnemy].body.velocity.y=0;
+                        this.enemies.children[this.currEnemy].loadTexture(this.enemies.children[this.currEnemy].key + 'crushed');
+                        this.currEnemy = null;
+                        this.trucksCrushed++;
+                        this.battling = false;
+                        this.totalCrush++;
+                        this.ending=false;
+                        win.destroy();
+                    }, this);
                 }
-                else if(this.battleEnemy.rotation > 100)
+                else if(this.battleEnemy.rotation > 100 && !this.ending)
                 {
-                    console.log('player lose');
+                    this.ending = true;
                     this.battlePlayer.destroy();
                     this.battlePlayer = undefined;
                     this.battleEnemy.destroy();
@@ -651,97 +687,130 @@ MonsterTruck.GameState = {
                     this.left = undefined;
                     this.right.destroy();
                     this.right = undefined;
-                    //change texture
                     this.currEnemy = null;
                     this.battling = false;
+                    this.ending=false;
                 }
             }
             //Round 2
             if((this.currEnemy+1)%3 === 2)
             {
+                //If the battle is over clear the battle
                 this.game.physics.arcade.collide(this.battlePlayer, this.battleEnemy, function()
                 {
-                    this.battlePlayer.body.velocity.x = 0;
-                    this.battleEnemy.body.velocity.x = 0;
-                    console.log('player wins');
-                    this.battlePlayer.destroy();
-                    this.battlePlayer = undefined;
-                    this.battleEnemy.destroy();
-                    this.battleEnemy = undefined;
-                    this.gas.destroy();
-                    this.gas = undefined;
-                    this.battleArena.destroy();
-                    this.battleArena = undefined;
-                    this.left.destroy();
-                    this.left = undefined;
-                    this.right.destroy();
-                    this.right = undefined;
-                    this.enemies.children[this.currEnemy].body.enable = false;
-                    this.enemies.children[this.currEnemy].body.velocity.x=0;
-                    this.enemies.children[this.currEnemy].body.velocity.y=0;
-                    this.currEnemy = null;
-                    this.trucksCrushed++;
-                    this.battling = false;
-                    this.totalCrush++;
+                    if(!this.ending)
+                    {
+                        this.ending = true;
+                        this.battlePlayer.body.velocity.x = 0;
+                        this.battleEnemy.body.velocity.x = 0;
+                    
+                        var win = this.add.sprite(480, 100, 'winner');
+                        win.scale.setTo(0.1, 0.1);
+                        win.anchor.setTo(0.5, 0.5);
+                        var winTween = this.add.tween(win.scale).to({x: 1, y: 1}, 2000, "Linear", true);
+                        winTween.onComplete.add(function()
+                        {
+                            this.battlePlayer.destroy();
+                            this.battlePlayer = undefined;
+                            this.battleEnemy.destroy();
+                            this.battleEnemy = undefined;
+                            this.gas.destroy();
+                            this.gas = undefined;
+                            this.battleArena.destroy();
+                            this.battleArena = undefined;
+                            this.left.destroy();
+                            this.left = undefined;
+                            this.right.destroy();
+                            this.right = undefined;
+                            this.enemies.children[this.currEnemy].body.enable = false;
+                            this.enemies.children[this.currEnemy].body.velocity.x=0;
+                            this.enemies.children[this.currEnemy].body.velocity.y=0;
+                            this.enemies.children[this.currEnemy].loadTexture(this.enemies.children[this.currEnemy].key + 'crushed');
+                            this.currEnemy = null;
+                            this.trucksCrushed++;
+                            this.battling = false;
+                            this.totalCrush++;
+                            this.ending=false;
+                            win.destroy();
+                        }, this);
+                    }
                 }, null, this);
             }
             //Round 3
             if((this.currEnemy+1)%3 === 0)
             {
                 this.cord.fromSprite(this.battlePlayer, this.battleEnemy, false);
+                //If the battle is over clear the battle
                 this.game.physics.arcade.collide(this.battlePlayer, this.playerBlocker, function()
                 {
-                    console.log('enemy wins');
-                    this.battlePlayer.destroy();
-                    this.battlePlayer = undefined;
-                    this.battleEnemy.destroy();
-                    this.battleEnemy = undefined;
-                    this.gas.destroy();
-                    this.gas = undefined;
-                    this.battleArena.destroy();
-                    this.battleArena = undefined;
-                    this.left.destroy();
-                    this.left = undefined;
-                    this.right.destroy();
-                    this.right = undefined; 
-                    this.cord=undefined;
-                    this.graphics.clear();
-                    this.graphics = undefined;
-                    this.enemies.children[this.currEnemy].body.enable = false;
-                    this.enemies.children[this.currEnemy].body.velocity.x=0;
-                    this.enemies.children[this.currEnemy].body.velocity.y=0;
-                    this.currEnemy = null;
-                    this.trucksCrushed++;
-                    this.battling = false;
-                    this.totalCrush++;
-                }, null, this)
+                    if(!this.ending)
+                    {
+                        this.ending=true;
+                        var win = this.add.sprite(480, 100, 'winner');
+                        win.scale.setTo(0.1, 0.1);
+                        win.anchor.setTo(0.5, 0.5);
+                        var winTween = this.add.tween(win.scale).to({x: 1, y: 1}, 2000, "Linear", true);
+                        winTween.onComplete.add(function()
+                        {
+                            this.battlePlayer.destroy();
+                            this.battlePlayer = undefined;
+                            this.battleEnemy.destroy();
+                            this.battleEnemy = undefined;
+                            this.gas.destroy();
+                            this.gas = undefined;
+                            this.battleArena.destroy();
+                            this.battleArena = undefined;
+                            this.left.destroy();
+                            this.left = undefined;
+                            this.right.destroy();
+                            this.right = undefined; 
+                            this.cord=undefined;
+                            this.graphics.clear();
+                            this.graphics = undefined;
+                            this.enemies.children[this.currEnemy].body.enable = false;
+                            this.enemies.children[this.currEnemy].body.velocity.x=0;
+                            this.enemies.children[this.currEnemy].body.velocity.y=0;
+                            this.enemies.children[this.currEnemy].loadTexture(this.enemies.children[this.currEnemy].key + 'crushed');
+                            this.currEnemy = null;
+                            this.trucksCrushed++;
+                            this.battling = false;
+                            this.totalCrush++;
+                            this.ending=false;
+                            win.destroy();
+                        }, this);
+                    }
+                }, null, this);
                 this.game.physics.arcade.collide(this.enemyBlocker, this.battleEnemy, function()
                 {
-                    console.log('player wins');
-                    this.battlePlayer.destroy();
-                    this.battlePlayer = undefined;
-                    this.battleEnemy.destroy();
-                    this.battleEnemy = undefined;
-                    this.gas.destroy();
-                    this.gas = undefined;
-                    this.battleArena.destroy();
-                    this.battleArena = undefined;
-                    this.left.destroy();
-                    this.left = undefined;
-                    this.right.destroy();
-                    this.right = undefined;
-                    this.cord=undefined;
-                    this.graphics.clear();
-                    this.graphics = undefined;
-                    this.currEnemy = null;
-                    this.battling = false;
+                    if(!this.ending)
+                    {
+                        this.ending=true;
+                        this.battlePlayer.destroy();
+                        this.battlePlayer = undefined;
+                        this.battleEnemy.destroy();
+                        this.battleEnemy = undefined;
+                        this.gas.destroy();
+                        this.gas = undefined;
+                        this.battleArena.destroy();
+                        this.battleArena = undefined;
+                        this.left.destroy();
+                        this.left = undefined;
+                        this.right.destroy();
+                        this.right = undefined;
+                        this.cord=undefined;
+                        this.graphics.clear();
+                        this.graphics = undefined;
+                        this.currEnemy = null;
+                        this.battling = false;
+                        this.ending=false;
+                    }
                 }, null, this);
             }
         }
     },
     render: function() 
     {
-
+        //Render the rop for battle 3
         if(this.battling && this.cord != undefined)
         {
             if(this.graphics!=undefined)

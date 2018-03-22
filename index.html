@@ -8,7 +8,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <!--must use this viewport setting-->
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="mobile-web-app-capable" content="yes">
@@ -24,8 +24,15 @@
 	    <script src="js/states/Story.js"></script>
 	    <script src="js/states/Game.js"></script>
         <script src="js/states/End.js"></script>
+<style>
+        .gameback{
+        background: url(assets/images/game-back.jpg);
+        background-size: cover;
+       	 -moz-background-size: cover;
+       	 z-index: -10;
 
-        <style>
+       }
+
             #ieError{
                 font-family: Arial;
                 font-size: 3rem;
@@ -41,7 +48,7 @@
 
 </head>
 
-<body>
+<body class="gameback">
 <form runat='server' id="form1" name='form1' method='POST' action="">
 <input type="hidden" id="player_score" value="" runat="server" />
 </form>

@@ -26,6 +26,9 @@ MonsterTruck.PreloadState = {
         this.load.image('enemy1', 'assets/images/enemy-one-top.png');
         this.load.image('enemy2', 'assets/images/enemy-two-top.png');
         this.load.image('enemy3', 'assets/images/enemy-three-top.png');
+        this.load.image('enemy1crushed', 'assets/images/enemy-one-crushed.png');
+        this.load.image('enemy2crushed', 'assets/images/enemy-two-crushed.png');
+        this.load.image('enemy3crushed', 'assets/images/enemy-three-crushed.png');
         
         this.load.image('battleArena', 'assets/images/battleArena.png');
         this.load.image('arena', 'assets/images/arena.png');
@@ -42,6 +45,7 @@ MonsterTruck.PreloadState = {
         this.load.image('blockerWidth', 'assets/images/blockerWidth.png');
         this.load.image('blockerHeight', 'assets/images/blockerHeight.png');
         this.load.image('blockerMid', 'assets/images/blockerMid.png');
+        this.load.image('winner', 'assets/images/winner.png');
         
         
         this.load.spritesheet('monster', 'assets/images/player.png', 117, 59, 5);
