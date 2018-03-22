@@ -75,10 +75,10 @@ MonsterTruck.GameState = {
         };
         //Bring all items up
         this.world.bringToTop(this.obstacles);
+        this.world.bringToTop(this.blockers);
         this.world.bringToTop(this.cars);
         this.world.bringToTop(this.sprite);
         this.world.bringToTop(this.enemies);
-        this.world.bringToTop(this.blockers);
         //Create the score board
         for(let i=0, len=this.allData.scoreboards.length; i<len; i++)
         {
@@ -92,24 +92,27 @@ MonsterTruck.GameState = {
     },
     createBlockers: function(x, y, height)
     {
-        //Choosees which type of blocker should be used
+        console.log('new');//Chooses which type of blocker should be used
         if(height)
         {
+            console.log('h');
             var block = this.add.sprite(x, y, 'blockerHeight');
         }
         else if(height === false)
         {
+            console.log('w');
             var block = this.add.sprite(x, y, 'blockerWidth');
         }
         else
         {
-           var block = this.add.sprite(x, y, 'blockerMid');
+           console.log('m');
+            var block = this.add.sprite(x, y, 'blockerMid');
         }
         //Add physics
         this.physics.enable(block, Phaser.Physics.ARCADE);
         block.body.collideWorldBounds = true;
-	    block.body.checkCollision.up = false;
-	    block.body.checkCollision.down = false;
+	    block.body.checkCollision.up = true;
+	    block.body.checkCollision.down = true;
 	    block.body.immovable = true;
         //Add to group
         this.blockers.add(block);
@@ -188,7 +191,7 @@ MonsterTruck.GameState = {
         //Return the ramp -> no group
         return newRamp;
     },
-    reverseCar: function(obstacle, car)
+    reverseCar: function(car, obstacle)
     {
         //Check if the car is moving along the x or y axis, then flip along that axis
         if(car.body.velocity.x!= 0)
@@ -218,10 +221,14 @@ MonsterTruck.GameState = {
             car.body.velocity.y=-car.body.velocity.y;
         }
     },
-    reverseEnemy: function(obstacle, enemy)
+    reverseEnemy: function(enemy, obstacle)
     {
+        if(enemy.body.velocity.x===0 && enemy.body.velocity.y===0)
+        {
+            //enemy.body.velocity.x = 100;
+        }
         //Reverse direction of the enemy
-        if(enemy.body.velocity.x!= 0)
+        else if(enemy.body.velocity.x!= 0)
         {
             enemy.body.velocity.x=-enemy.body.velocity.x;
         }
@@ -593,15 +600,25 @@ MonsterTruck.GameState = {
         //Check for collisions and overlaps
         this.game.physics.arcade.collide(this.ramp1, this.sprite, this.flipTruck, null, this);
         this.game.physics.arcade.collide(this.ramp2, this.sprite, this.flipTruck, null, this);
-        this.game.physics.arcade.collide(this.blockers, this.cars, this.reverseCar, null, this);
-        this.game.physics.arcade.collide(this.obstacles, this.cars, this.reverseCar, null, this); 
         this.game.physics.arcade.overlap(this.sprite, this.obstacles, this.resetTruck, null, this); 
         this.game.physics.arcade.overlap(this.sprite, this.cars, this.crusher, null, this); 
         
-        this.game.physics.arcade.collide(this.blockers, this.enemies, this.reverseEnemy, null, this);
-        this.game.physics.arcade.collide(this.obstacles, this.enemies, this.reverseEnemy, null, this); 
+        this.game.physics.arcade.collide(this.ramp1, this.enemies, this.reverseEnemy, null, this);
+        this.game.physics.arcade.collide(this.ramp2, this.enemies, this.reverseEnemy, null, this);
+        this.game.physics.arcade.collide(this.ramp1, this.cars, this.reverseCar, null, this);
+        this.game.physics.arcade.collide(this.ramp2, this.cars, this.reverseCar, null, this);
         this.game.physics.arcade.overlap(this.enemies, this.cars, this.crusher, null, this);
         this.game.physics.arcade.overlap(this.sprite, this.enemies, this.startBattle, null, this);
+        this.enemies.forEach(function(e)
+        {
+            this.game.physics.arcade.overlap(e, this.blockers, this.reverseEnemy, null, this);
+            this.game.physics.arcade.collide(e, this.obstacles, this.reverseEnemy, null, this); 
+        }, this);
+        this.cars.forEach(function(c)
+        {
+            this.game.physics.arcade.overlap(c, this.blockers, this.reverseCar, null, this);
+            this.game.physics.arcade.collide(c, this.obstacles, this.reverseCar, null, this); 
+        }, this);
         //Check if game should end
         if(this.totalCrush === (this.cars.length + this.enemies.length))
         {

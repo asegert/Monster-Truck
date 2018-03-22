@@ -70,7 +70,7 @@ MonsterTruck.PreloadState = {
         this.load.video('gif1', 'assets/video/gif1.mp4');
         this.load.video('gif2', 'assets/video/gif2.mp4');
         this.load.video('gif3', 'assets/video/gif3.mp4');
-        this.load.video('gif4', 'assets/video/gif4.mp4');
+        //this.load.video('gif4', 'assets/video/gif4.mp4');
     },
     create: function ()
     {

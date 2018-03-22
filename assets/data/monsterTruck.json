@@ -22,7 +22,7 @@
                 [500, 517, "raceWhite"], 
                 [550, 50, "cone"],
                 [100, 450, "barrelBlue"],
-                [150, 100, "barrelRed"],
+                [200, 150, "barrelRed"],
                 [750, 150, "barrelBlue"],
                 [330, 380, "cone"],
                 [850, 450, "barrelRed"]
@@ -36,7 +36,7 @@
                 [290, 270, null]
               ],
     "enemies": [
-                [100, 40, "enemy1", true], 
+                [100, 60, "enemy1", true], 
                 [780, 60, "enemy2", false], 
                 [780, 500, "enemy3", false]
              ],

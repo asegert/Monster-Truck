@@ -27,10 +27,10 @@ MonsterTruck.StoryState = {
             g2.play(true);
             g2.addToWorld(960, 0, 0.9, 0.1, 1.3, 1.3);
         
-            var g3 = this.add.video('gif4');
+            /*var g3 = this.add.video('gif4');
             g3.play(true);
             g3.addToWorld(0, 640, 0.1, 0.9, 0.8, 0.8);
-        
+        */
             var g4 = this.add.video('gif1');
             g4.play(true);
             g4.addToWorld(960, 640, 0.9, 0.9);
