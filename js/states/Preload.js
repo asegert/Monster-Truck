@@ -11,6 +11,7 @@ MonsterTruck.PreloadState = {
         this.load.image('mainButton', 'assets/images/main-start-button.png');
         this.load.image('story', 'assets/images/menu-background.jpg');
         this.load.image('alertMain', 'assets/images/press-the-pedal.png');
+        this.load.image('alertBattle', 'assets/images/tap-the-pedal.png');
         this.load.image('coupon', 'assets/images/monsterTruck_coupon.jpg');
         this.load.image('scoreboard', 'assets/images/scoreboard.png');
         
@@ -70,7 +71,7 @@ MonsterTruck.PreloadState = {
         this.load.video('gif1', 'assets/video/gif1.mp4');
         this.load.video('gif2', 'assets/video/gif2.mp4');
         this.load.video('gif3', 'assets/video/gif3.mp4');
-        //this.load.video('gif4', 'assets/video/gif4.mp4');
+        this.load.video('gif4', 'assets/video/gif4.mp4');
     },
     create: function ()
     {

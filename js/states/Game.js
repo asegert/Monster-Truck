@@ -415,6 +415,11 @@ MonsterTruck.GameState = {
         //If a battle is not in progress begin one
         if(!this.battling)
         {
+            this.tempX = enemy.body.velocity.x;
+            this.tempY = enemy.body.velocity.y;
+            enemy.body.velocity.x=0;
+            enemy.body.velocity.y=0;
+            
             MonsterTruck.audio.volume = 0.3;
             var sound = this.add.audio('horn');
             sound.play();
@@ -451,12 +456,12 @@ MonsterTruck.GameState = {
                         this.battlePlayer = this.add.sprite(250, 250, 'player');
                         this.battleEnemy = this.add.sprite(600, 250, enemy.key);
                     
-                        this.battlePlayer.anchor.setTo(0.1, 0.5);
-                        this.battleEnemy.anchor.setTo(0.1, 0.5);
+                        this.battlePlayer.anchor.setTo(0.9, 0.5);
+                        this.battleEnemy.anchor.setTo(0.9, 0.5);
                     
                         this.ins = this.add.sprite(0, 0, 'battle1Ins');
                         
-                        this.gas = this.add.button(460, 400, 'gas', function()
+                        this.gas = this.add.button(460, 420, 'gas', function()
                         {
                             if(this.ins!=undefined)
                             {
@@ -476,6 +481,13 @@ MonsterTruck.GameState = {
                             
                             this.playerRotation+=0.01;
                         }, this);
+                        
+                        //Alert to hit the gas
+                        this.alert = this.add.sprite(400, 420, 'alertBattle');
+                        this.alert.scale.setTo(0.5, 0.5);
+                        this.alert.alpha=0;
+                        this.alertTween = this.add.tween(this.alert).to( { alpha: 1 }, 1000, "Linear", true, 0, -1);
+                        this.world.bringToTop(this.ins);
                     }
                     //Round 2
                     else if(enemy.key === 'enemy2')
@@ -507,7 +519,7 @@ MonsterTruck.GameState = {
                         
                         this.ins = this.add.sprite(0, 0, 'battle2Ins');
                     
-                        this.gas = this.add.button(460, 400, 'gas', function()
+                        this.gas = this.add.button(460, 420, 'gas', function()
                         {
                             if(this.ins!=undefined)
                             {
@@ -525,6 +537,12 @@ MonsterTruck.GameState = {
                             
                             this.battlePlayer.body.velocity.x+=20;
                         }, this);
+                        //Alert to hit the gas
+                        this.alert = this.add.sprite(400, 420, 'alertBattle');
+                        this.alert.scale.setTo(0.5, 0.5);
+                        this.alert.alpha=0;
+                        this.alertTween = this.add.tween(this.alert).to( { alpha: 1 }, 1000, "Linear", true, 0, -1);
+                        this.world.bringToTop(this.ins);
                     }
                     //Round 3
                     else
@@ -533,21 +551,21 @@ MonsterTruck.GameState = {
                         this.currEnemy = 2;
                         this.battleArena = this.add.sprite(0, 0, 'battleArena');
                     
-                        this.battlePlayer = this.add.sprite(480, 250, 'player');
+                        this.battlePlayer = this.add.sprite(500, 200, 'player');
                         this.physics.enable(this.battlePlayer, Phaser.Physics.ARCADE);
                         this.battlePlayer.body.collideWorldBounds = true;
 	                    this.battlePlayer.body.checkCollision.up = false;
                         this.battlePlayer.body.checkCollision.down = false;
                         this.battlePlayer.body.immovable = true;
-                        this.battlePlayer.body.velocity.x=20;
+                        this.battlePlayer.body.velocity.x=0;
                     
-                        this.battleEnemy = this.add.sprite(480, 250, enemy.key);
+                        this.battleEnemy = this.add.sprite(460, 200, enemy.key);
                         this.physics.enable(this.battleEnemy, Phaser.Physics.ARCADE);
                         this.battleEnemy.body.collideWorldBounds = true;
 	                    this.battleEnemy.body.checkCollision.up = false;
                         this.battleEnemy.body.checkCollision.down = false;
 	                    this.battleEnemy.body.immovable = true;
-                        this.battleEnemy.body.velocity.x=-20;
+                        this.battleEnemy.body.velocity.x=0;
                     
                         this.battlePlayer.anchor.setTo(0.1, 0.5);
                         this.battleEnemy.anchor.setTo(0.1, 0.5);
@@ -570,7 +588,7 @@ MonsterTruck.GameState = {
                         
                         this.ins = this.add.sprite(0, 0, 'battle3Ins');
                     
-                        this.gas = this.add.button(460, 400, 'gas', function()
+                        this.gas = this.add.button(460, 420, 'gas', function()
                         {
                             if(this.ins!=undefined)
                             {
@@ -582,11 +600,19 @@ MonsterTruck.GameState = {
                                     if(this.battleEnemy!= undefined && this.currEnemy === 2 && this.battleEnemy.body!=null)
                                     {
                                         this.battleEnemy.body.velocity.x-=5;
+                                        this.battlePlayer.body.velocity.x-=5;
                                     }
                                 }, this);
                             }
                             this.battlePlayer.body.velocity.x+=5;
+                            this.battleEnemy.body.velocity.x+=5;
                         }, this);
+                        //Alert to hit the gas
+                        this.alert = this.add.sprite(400, 420, 'alertBattle');
+                        this.alert.scale.setTo(0.5, 0.5);
+                        this.alert.alpha=0;
+                        this.alertTween = this.add.tween(this.alert).to( { alpha: 1 }, 1000, "Linear", true, 0, -1);
+                        this.world.bringToTop(this.ins);
                     }
                 }, this);
             }, this);
@@ -685,6 +711,9 @@ MonsterTruck.GameState = {
                         this.trucksCrushed++;
                         this.battling = false;
                         this.totalCrush++;
+                        this.tempX=0;
+                        this.tempY=0;
+                        this.alert.destroy();
                         this.ending=false;
                         win.destroy();
                     }, this);
@@ -704,6 +733,11 @@ MonsterTruck.GameState = {
                     this.left = undefined;
                     this.right.destroy();
                     this.right = undefined;
+                    this.enemies.children[this.currEnemy].body.velocity.x=this.tempX;
+                    this.enemies.children[this.currEnemy].body.velocity.y=this.tempY;
+                    this.tempX=0;
+                    this.tempY=0;
+                    this.alert.destroy();
                     this.currEnemy = null;
                     this.battling = false;
                     this.ending=false;
@@ -745,6 +779,9 @@ MonsterTruck.GameState = {
                             this.enemies.children[this.currEnemy].loadTexture(this.enemies.children[this.currEnemy].key + 'crushed');
                             this.currEnemy = null;
                             this.trucksCrushed++;
+                            this.tempX=0;
+                            this.tempY=0;
+                            this.alert.destroy();
                             this.battling = false;
                             this.totalCrush++;
                             this.ending=false;
@@ -790,6 +827,9 @@ MonsterTruck.GameState = {
                             this.enemies.children[this.currEnemy].loadTexture(this.enemies.children[this.currEnemy].key + 'crushed');
                             this.currEnemy = null;
                             this.trucksCrushed++;
+                            this.tempX=0;
+                            this.tempY=0;
+                            this.alert.destroy();
                             this.battling = false;
                             this.totalCrush++;
                             this.ending=false;
@@ -818,6 +858,7 @@ MonsterTruck.GameState = {
                         this.graphics.clear();
                         this.graphics = undefined;
                         this.currEnemy = null;
+                        this.alert.destroy();
                         this.battling = false;
                         this.ending=false;
                     }
