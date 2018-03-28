@@ -32,6 +32,7 @@ MonsterTruck.PreloadState = {
         this.load.image('enemy3crushed', 'assets/images/enemy-three-crushed.png');
         
         this.load.image('battleArena', 'assets/images/battleArena.png');
+        this.load.image('battleArenaHorizontal', 'assets/images/battleArenaHorizontal.png');
         this.load.image('arena', 'assets/images/arena.png');
         this.load.image('hill', 'assets/images/hill.png');
         this.load.image('barrelBlue', 'assets/images/barrel_blue.png');
@@ -75,7 +76,7 @@ MonsterTruck.PreloadState = {
     },
     create: function ()
     {
-        this.state.start('Story');
+        this.state.start('Game');
     }
 };
 /*Copyright (C) Wayside Co. - All Rights Reserved
