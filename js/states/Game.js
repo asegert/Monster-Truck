@@ -59,8 +59,10 @@ MonsterTruck.GameState = {
         //Pull away from the opponent
         this.battleArena = this.add.sprite(0, 0, 'battleArenaHorizontal');
                     
-        this.battlePlayer = this.add.sprite(500, 200, 'player');
-        this.battleEnemy = this.add.sprite(460, 200, 'enemy3');
+        this.battlePlayer = this.add.sprite(500, 500, 'player');
+        this.battleEnemy = this.add.sprite(460, 500, 'enemy3');
+        this.battlePlayer.scale.setTo(0.5, 0.5);
+        this.battleEnemy.scale.setTo(-0.5, 0.5);
                     
         this.battlePlayer.anchor.setTo(0.1, 0.5);
         this.battleEnemy.anchor.setTo(0.1, 0.5);
@@ -79,13 +81,10 @@ MonsterTruck.GameState = {
                 {
                     if(this.battleEnemy!= undefined && this.currEnemy === 2 && this.battleEnemy.body!=null)
                     {
-                        this.battleEnemy.body.velocity.x-=5;
-                        this.battlePlayer.body.velocity.x-=5;
+                        
                     }
                 }, this);
             }
-            this.battlePlayer.body.velocity.x+=5;
-            this.battleEnemy.body.velocity.x+=5;
          }, this);
          //Alert to hit the gas
          this.alert = this.add.sprite(400, 420, 'alertBattle');

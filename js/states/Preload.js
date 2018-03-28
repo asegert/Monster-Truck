@@ -13,7 +13,6 @@ MonsterTruck.PreloadState = {
         this.load.image('alertMain', 'assets/images/press-the-pedal.png');
         this.load.image('alertBattle', 'assets/images/tap-the-pedal.png');
         this.load.image('coupon', 'assets/images/monsterTruck_coupon.jpg');
-        this.load.image('scoreboard', 'assets/images/scoreboard.png');
         
         this.load.image('mainIns', 'assets/images/menu-instructions.png');
         this.load.image('battle1Ins', 'assets/images/battle1-instructions.png');
@@ -21,47 +20,23 @@ MonsterTruck.PreloadState = {
         this.load.image('battle3Ins', 'assets/images/battle3-instructions.png');
         
         
-        this.load.image('player', 'assets/images/truck.png');
+        this.load.spritesheet('player', 'assets/images/monsterTruckSpritesheet.png', 700, 420, 8);
         this.load.image('battleTruck', 'assets/images/battle-trigger-truck.png');
         
-        this.load.image('enemy1', 'assets/images/enemy-one-top.png');
-        this.load.image('enemy2', 'assets/images/enemy-two-top.png');
-        this.load.image('enemy3', 'assets/images/enemy-three-top.png');
-        this.load.image('enemy1crushed', 'assets/images/enemy-one-crushed.png');
-        this.load.image('enemy2crushed', 'assets/images/enemy-two-crushed.png');
-        this.load.image('enemy3crushed', 'assets/images/enemy-three-crushed.png');
+        this.load.spritesheet('enemy1', 'assets/images/monsterTruckSpritesheetblue.png', 700, 420, 8);
+        this.load.spritesheet('enemy2', 'assets/images/monsterTruckSpritesheetpurple.png', 700, 420, 8);
+        this.load.spritesheet('enemy3', 'assets/images/monsterTruckSpritesheetred.png', 700, 420, 8);
         
         this.load.image('battleArena', 'assets/images/battleArena.png');
         this.load.image('battleArenaHorizontal', 'assets/images/battleArenaHorizontal.png');
         this.load.image('arena', 'assets/images/arena.png');
         this.load.image('hill', 'assets/images/hill.png');
-        this.load.image('barrelBlue', 'assets/images/barrel_blue.png');
-        this.load.image('barrelRed', 'assets/images/barrel_red.png');
-        this.load.image('raceRed', 'assets/images/barrier_red_race.png');
-        this.load.image('raceWhite', 'assets/images/barrier_white_race.png');
-        this.load.image('cone', 'assets/images/cone_straight.png');
-        this.load.image('oil', 'assets/images/oil.png');
         this.load.image('gas', 'assets/images/gas.png');
-        this.load.image('ramp', 'assets/images/ramp.png');
-        this.load.image('ramp2', 'assets/images/ramp2.png');
-        this.load.image('blockerWidth', 'assets/images/blockerWidth.png');
-        this.load.image('blockerHeight', 'assets/images/blockerHeight.png');
-        this.load.image('blockerMid', 'assets/images/blockerMid.png');
         this.load.image('winner', 'assets/images/winner.png');
         
         
         this.load.spritesheet('monster', 'assets/images/player.png', 117, 59, 5);
-        
-        
-        this.load.spritesheet('carsUp', 'assets/images/carsUp.png', 60, 60, 3);
-        this.load.spritesheet('carsDown', 'assets/images/carsDown.png', 60, 60, 3);
-        this.load.spritesheet('carsLeft', 'assets/images/carsLeft.png', 60, 60, 3);
-        this.load.spritesheet('carsRight', 'assets/images/carsRight.png', 60, 60, 3);
-        this.load.spritesheet('carsCrushedUp', 'assets/images/carsCrushedUp.png', 60, 60, 3);
-        this.load.spritesheet('carsCrushedDown', 'assets/images/carsCrushedDown.png', 60, 60, 3);
-        this.load.spritesheet('carsCrushedLeft', 'assets/images/carsCrushedLeft.png', 60, 60, 3);
-        this.load.spritesheet('carsCrushedRight', 'assets/images/carsCrushedRight.png', 60, 60, 3);
-        
+
         this.load.text('monsterData', 'assets/data/monsterTruck.json');
         
         this.load.audio('horn', ['assets/audio/stadiumHorn.mp3', 'assets/audio/stadiumHorn.m4a', 'assets/audio/stadiumHorn.ogg']);
