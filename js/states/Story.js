@@ -38,7 +38,7 @@ MonsterTruck.StoryState = {
         g5.addToWorld(480, 320, 0.5, 0.5, 0.7, 0.7);
         
         //Logo
-        this.add.sprite(40, 0, 'logo');
+        this.add.sprite(100, 0, 'logo');
         
         //Enter the monster dome button
         this.button = this.add.button(100, 350, 'mainButton', function()

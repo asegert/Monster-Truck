@@ -171,9 +171,7 @@ MonsterTruck.GameState = {
         this.alertTween = this.add.tween(this.alert).to( { alpha: 1 }, 1000, "Linear", true, 0, -1);
         this.world.bringToTop(this.ins);
         
-        this.jump1 = this.add.sprite(1380, 600, 'jump');
         this.physics.enable(this.battlePlayer, Phaser.Physics.ARCADE);
-        this.physics.enable(this.jump1, Phaser.Physics.ARCADE);
     },
     update: function()
     {
