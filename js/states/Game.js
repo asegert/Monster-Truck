@@ -271,12 +271,11 @@ MonsterTruck.GameState = {
         if(MonsterTruck.Level === 2 && this.power!=undefined)  
         {
             var graphics=this.game.add.graphics(10,0);
-            var graphics=this.game.add.graphics(this.power.start.x,this.power.start.y);//if you have a static line
+            var graphics=this.game.add.graphics(this.power.start.x,this.power.start.y);
             graphics.lineStyle(30, 0xff0000, 30);
-            graphics.moveTo(this.power.start.x, this.power.start.y);//moving position of graphic if you draw mulitple lines
+            graphics.moveTo(this.power.start.x, this.power.start.y);
             graphics.lineTo(this.power.end.x, this.power.end.y);
             graphics.endFill();
-            //this.game.debug.geom(this.power);
 
         }
 
