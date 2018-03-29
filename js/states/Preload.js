@@ -21,12 +21,13 @@ MonsterTruck.PreloadState = {
         this.load.image('chain', 'assets/images/chain.png');
         
         
-        this.load.spritesheet('player', 'assets/images/monsterTruckSpritesheet.png', 700, 420, 8);
+        this.load.spritesheet('player', 'assets/images/monsterTruckSpritesheetred.png', 700, 420, 8);
+        this.load.spritesheet('playerLeft', 'assets/images/monsterTruckSpritesheetred.png', 700, 420, 8);
+        this.load.spritesheet('playerRight', 'assets/images/monsterTruckSpritesheetredright.png', 700, 420, 8);
         this.load.image('battleTruck', 'assets/images/battle-trigger-truck.png');
         
-        this.load.spritesheet('enemy1', 'assets/images/monsterTruckSpritesheetblue.png', 700, 420, 8);
-        this.load.spritesheet('enemy2', 'assets/images/monsterTruckSpritesheetpurple.png', 700, 420, 8);
-        this.load.spritesheet('enemy3', 'assets/images/monsterTruckSpritesheetred.png', 700, 420, 8);
+        this.load.spritesheet('enemy', 'assets/images/monsterTruckSpritesheetpurple.png', 700, 420, 8);
+        this.load.spritesheet('enemyRight', 'assets/images/monsterTruckSpritesheetpurpleright.png', 700, 420, 8);
         
         this.load.image('battleArena', 'assets/images/battleArena.png');
         this.load.image('battleArenaHorizontal', 'assets/images/battleArenaHorizontal.png');
@@ -55,7 +56,7 @@ MonsterTruck.PreloadState = {
     },
     create: function ()
     {
-        this.state.start('Game');
+        this.state.start('Story');
     }
 };
 /*Copyright (C) Wayside Co. - All Rights Reserved
