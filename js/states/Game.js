@@ -40,6 +40,7 @@ MonsterTruck.GameState = {
         this.battleArena = this.add.sprite(-1920, 0, 'battleArenaHorizontal');
         //Boolean to track whether the climb has begun or not
         this.start = true;
+        this.holding = false;
         //Hill to climb
         this.add.image(0, 0, 'hill');
         this.physics.startSystem(Phaser.Physics.ARCADE);
@@ -70,8 +71,9 @@ MonsterTruck.GameState = {
             this.alertTween.pause();
             this.alert.alpha=0;
             //Move the car
-            this.sprite.body.velocity.x=217.8;
-            this.sprite.body.velocity.y=-180;
+            this.sprite.body.velocity.x+=968;
+            this.sprite.body.velocity.y+=-800;
+            this.holding=true;
         }, this);
         this.gas.events.onInputUp.add(function()
         {
@@ -81,8 +83,12 @@ MonsterTruck.GameState = {
             this.alertTween.resume();
             this.start = false;
             //Reverse velocity so truck 'falls downhill'
-            this.sprite.body.velocity.x=-30.25;
-            this.sprite.body.velocity.y=25;
+            if(this.holding)
+            {
+                this.sprite.body.velocity.x+=-12.1;
+                this.sprite.body.velocity.y+=10;
+            }
+            this.holding=false;
         }, this);
         //Alert to hit the gas
         this.alert = this.add.sprite(700, 350, 'alertBattle');
@@ -97,6 +103,8 @@ MonsterTruck.GameState = {
     {
         //Pull away from the opponent
         this.battleArena = this.add.sprite(-1920, 0, 'battleArenaHorizontal');
+        this.insAlert = this.add.text(450, 0, `Tug-o-War`, {fill: '#ffffff'});
+        this.distance = this.add.text(0, 0, `Distance: ${Math.abs(this.battleArena.x)}m`, {fill: '#ffffff'});
         
         this.chain = this.add.sprite(320, 440, 'chain');            
         this.battlePlayer = this.add.sprite(50, 500, 'player');
@@ -142,6 +150,9 @@ MonsterTruck.GameState = {
         //Jump
         this.battleArena = this.add.sprite(0, 0, 'battleArenaJump');
         this.physics.enable(this.battleArena, Phaser.Physics.ARCADE);
+        
+        this.powerText = this.add.text(0, 4, 'Speed: ', {fill: '#ffffff'});
+        this.power = new Phaser.Line(50, 10, 51, 10);
                     
         this.battlePlayer = this.add.sprite(250, 500, 'playerRight');
         //this.battleEnemy = this.add.sprite(900, 250, 'enemy2');
@@ -162,7 +173,10 @@ MonsterTruck.GameState = {
                 this.ins=undefined;
             } 
             if(!this.disable)
+            {
                 this.battleArena.body.velocity.x-=10;
+                this.power = new Phaser.Line(50, 10, 50 + Math.abs(this.battleArena.body.velocity.x), 10);
+            }
         }, this);
         //Alert to hit the gas
         this.alert = this.add.sprite(700, 420, 'alertBattle');
@@ -178,8 +192,9 @@ MonsterTruck.GameState = {
         if(MonsterTruck.Level === 0)
         {
             //Checks that the truck has not hit the top or bottom of the hill and reacts accordingly if so
-            if(!this.start && this.sprite.y >= 420)
+            if(!this.start && this.sprite.y >= 600)
             {
+                console.log('k');
                 this.sprite.body.velocity.x=0;
                 this.sprite.body.velocity.y=0;
                 this.start = true;
@@ -189,9 +204,15 @@ MonsterTruck.GameState = {
                 MonsterTruck.Level++;
                 this.state.start('Game');
             }
+            if(this.holding)
+            {
+                this.sprite.body.velocity.x=1;
+                this.sprite.body.velocity.y=1;
+            }
         }
         else if(MonsterTruck.Level === 1)
         {
+            this.distance.setText(`Distance: ${Math.round(Math.abs(this.battleArena.x))}m`);
             if(this.battleArena.x >= -50)
             {
                 console.log('player win');
@@ -214,7 +235,11 @@ MonsterTruck.GameState = {
                 var rot = this.add.tween(this.battlePlayer).to({angle: -30}, (0.001 * this.battleArena.body.velocity.x), "Linear", true);
                 rot.onComplete.add(function()
                 {
-                    this.add.tween(this.battlePlayer).to({x: 300, y: 250}, (3 * this.battleArena.body.velocity.x), "Linear", true);
+                    var higher = this.add.tween(this.battlePlayer).to({x: 300, y: 250}, (3 * this.battleArena.body.velocity.x), "Linear", true);
+                    higher.onComplete.add(function()
+                    {
+                        this.battleArena.body.velocity.x = this.battleArena.body.velocity.x * 2;
+                    }, this);
                 }, this);
             }
             if(this.battleArena.x < -3500 && this.over)
@@ -240,6 +265,21 @@ MonsterTruck.GameState = {
                 this.add.tween(this.battlePlayer).to({angle: -10}, (1 * this.battleArena.body.velocity.x), "Linear", true);
             }
         }
+    },
+    render: function() 
+    {
+        if(MonsterTruck.Level === 2 && this.power!=undefined)  
+        {
+            var graphics=this.game.add.graphics(10,0);
+            var graphics=this.game.add.graphics(this.power.start.x,this.power.start.y);//if you have a static line
+            graphics.lineStyle(30, 0xff0000, 30);
+            graphics.moveTo(this.power.start.x, this.power.start.y);//moving position of graphic if you draw mulitple lines
+            graphics.lineTo(this.power.end.x, this.power.end.y);
+            graphics.endFill();
+            //this.game.debug.geom(this.power);
+
+        }
+
     }
 };
 /*Copyright (C) Wayside Co. - All Rights Reserved
