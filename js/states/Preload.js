@@ -31,6 +31,9 @@ MonsterTruck.PreloadState = {
         this.load.image('hill', 'assets/images/hill.png');
         this.load.image('gas', 'assets/images/gas.png');
         this.load.image('winner', 'assets/images/winner.png');
+        this.load.image('gauge', 'assets/images/rpmGauge.png');
+        this.load.image('hand', 'assets/images/rpmHand.png');
+        this.load.image('arrow', 'assets/images/arrow.png');
         
         this.load.audio('horn', ['assets/audio/stadiumHorn.mp3', 'assets/audio/stadiumHorn.m4a', 'assets/audio/stadiumHorn.ogg']);
         this.load.audio('sunday', ['assets/audio/Sunday.mp3', 'assets/audio/Sunday.m4a', 'assets/audio/Sunday.ogg']);

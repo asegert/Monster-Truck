@@ -16,8 +16,6 @@ MonsterTruck.GameState = {
         {
             MonsterTruck.audio.volume = 1;
         }, this);
-        //Get variable values
-        this.allData = JSON.parse(this.game.cache.getText('monsterData'));
         if(MonsterTruck.Level === 0)
         {
             this.startBattleOne();
@@ -44,9 +42,33 @@ MonsterTruck.GameState = {
         //Hill to climb
         this.add.image(0, 0, 'hill');
         this.physics.startSystem(Phaser.Physics.ARCADE);
+        this.gauge = this.add.sprite(0, 0, 'gauge');
+        this.hand = this.add.sprite(108, 110, 'hand');
+        this.hand.anchor.setTo(0.5, 0.2);
         //Truck to climb up
         this.sprite = this.add.sprite(100, 550, 'playerRight');
         this.sprite.animations.add('walk');
+        
+        this.times = 10;
+        this.countDown = this.add.text(200, 0, `Time: ${this.times}`, {fill: '#ff0000', font: '28px Arial', stroke: '#ffff00', strokeThickness: '3'});
+        this.time.events.repeat(Phaser.Timer.SECOND, 11, function()
+        {
+            this.times--;
+            if(this.times >= 0)
+                this.countDown.setText(`Time: ${this.times}`);
+            else
+            {
+                this.gas.destroy();
+                this.sprite.body.velocity.x+=-968;
+                this.sprite.body.velocity.y+=800;
+                this.countDown.setText(`You Lose`);
+                this.time.events.add(Phaser.Timer.SECOND, function()
+                {
+                    MonsterTruck.Level++;
+                    this.state.start('Game');
+                }, this);
+            }
+        }, this);
         
         this.sprite.animations.play('walk', 5, true);
         this.sprite.scale.setTo(0.3, 0.3);
@@ -71,9 +93,9 @@ MonsterTruck.GameState = {
             this.alertTween.pause();
             this.alert.alpha=0;
             //Move the car
-            this.sprite.body.velocity.x+=968;
-            this.sprite.body.velocity.y+=-800;
-            this.holding=true;
+            this.sprite.body.velocity.x+=12.1;
+            this.sprite.body.velocity.y+=-10;
+            this.hand.rotation+=0.1;
         }, this);
         this.gas.events.onInputUp.add(function()
         {
@@ -82,13 +104,6 @@ MonsterTruck.GameState = {
             this.gas.rotation = 0;
             this.alertTween.resume();
             this.start = false;
-            //Reverse velocity so truck 'falls downhill'
-            if(this.holding)
-            {
-                this.sprite.body.velocity.x+=-12.1;
-                this.sprite.body.velocity.y+=10;
-            }
-            this.holding=false;
         }, this);
         //Alert to hit the gas
         this.alert = this.add.sprite(700, 350, 'alertBattle');
@@ -103,7 +118,7 @@ MonsterTruck.GameState = {
     {
         //Pull away from the opponent
         this.battleArena = this.add.sprite(-1920, 0, 'battleArenaHorizontal');
-        this.insAlert = this.add.text(450, 0, `Tug-o-War`, {fill: '#ffffff'});
+        this.insAlert = this.add.text(300, 0, `Tug-o-War`, {fill: '#ff0000', font: '64px Arial', stroke: '#ffff00', strokeThickness: '3'});
         this.distance = this.add.text(0, 0, `Distance: ${Math.abs(this.battleArena.x)}m`, {fill: '#ffffff'});
         
         this.chain = this.add.sprite(320, 440, 'chain');            
@@ -119,6 +134,10 @@ MonsterTruck.GameState = {
         this.battlePlayer.animations.play('walk', 5, true);
         this.battleEnemy.animations.add('walk');   
         this.battleEnemy.animations.play('walk', 5, true);
+        
+        this.arrow = this.add.sprite(125, 250, 'arrow');
+        this.arrow.alpha = 0;
+        this.add.tween(this.arrow).to({alpha: 1}, 500, "Linear", true, 0, -1);
                         
         this.ins = this.add.sprite(0, 0, 'battle3Ins');
                     
@@ -132,9 +151,11 @@ MonsterTruck.GameState = {
                 this.time.events.loop(Phaser.Timer.SECOND, function()
                 {
                     if(!this.over)
-                        this.add.tween(this.battleArena).to({x: this.battleArena.x - (Math.round(Math.random()*50))}, 100, "Linear", true);
+                        this.add.tween(this.battleArena).to({x: this.battleArena.x - (Math.round(Math.random()*50) + 15)}, 100, "Linear", true);
                 }, this);
             }
+            else if(this.arrow!=undefined)
+                this.arrow.destroy();
             if(!this.over)
                 this.add.tween(this.battleArena).to({x: this.battleArena.x + 30}, 100, "Linear", true);
          }, this);
@@ -204,11 +225,6 @@ MonsterTruck.GameState = {
                 MonsterTruck.Level++;
                 this.state.start('Game');
             }
-            if(this.holding)
-            {
-                this.sprite.body.velocity.x=1;
-                this.sprite.body.velocity.y=1;
-            }
         }
         else if(MonsterTruck.Level === 1)
         {
@@ -244,6 +260,7 @@ MonsterTruck.GameState = {
             }
             if(this.battleArena.x < -3500 && this.over)
             {
+                this.add.text(120, 200, `The Truck Jumped ${Math.abs(this.battleArena.body.velocity.x)}m`, {fill: '#ff0000', font: '64px Arial', stroke: '#ffff00', strokeThickness: '3'});
                 this.over = false;
                 this.battleArena.body.velocity.x=0;
                 var rotate = this.add.tween(this.battlePlayer).to({angle: 20}, (2 * this.battleArena.body.velocity.x), "Linear", true);
@@ -255,13 +272,17 @@ MonsterTruck.GameState = {
                 last.onComplete.add(function()
                 {
                     MonsterTruck.Level++;
-                    this.state.start('Game');
+                    this.time.events.add(Phaser.Timer.SECOND * 2, function()
+                    {
+                        this.state.start('Game');
+                    }, this);
                 }, this);
             }
             if(this.battleArena.x<-2050 && this.jumping)
             {
                 this.jumping = false;
                 this.over = true;
+                console.log(this.battleArena.body.velocity.x);
                 this.add.tween(this.battlePlayer).to({angle: -10}, (1 * this.battleArena.body.velocity.x), "Linear", true);
             }
         }

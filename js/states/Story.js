@@ -46,6 +46,8 @@ MonsterTruck.StoryState = {
             MonsterTruck.Level=0;
             this.state.start('Game');
         }, this);
+        this.button.alpha = 0;
+        this.add.tween(this.button).to({alpha: 1}, 500, "Linear", true, 0, -1);
     }
 };
 /*Copyright (C) Wayside Co. - All Rights Reserved
