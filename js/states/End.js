@@ -26,7 +26,21 @@ MonsterTruck.EndState = {
         var coupon=this.add.sprite(this.world.centerX+15, this.world.centerY+10, 'coupon');
         coupon.anchor.setTo(0.5, 0.5);
         coupon.scale.setTo(0.005, 0.005);
-        this.add.tween(coupon.scale).to({x: 1, y:1}, 2000, "Linear", true);
+        var cTween = this.add.tween(coupon.scale).to({x: 1, y:1}, 2000, "Linear", true);
+        cTween.onComplete.add(function()
+        {
+            this.time.events.add(Phaser.Timer.SECOND, function()
+            {
+                if(MonsterTruck.Level < 3)
+                {
+                    this.state.start('Game');
+                }
+                else
+                {
+                    console.log('continue');
+                }
+            }, this);
+        }, this);
         //coupon on click go to
     }
 };

@@ -84,7 +84,7 @@ MonsterTruck.GameState = {
                         this.time.events.add(Phaser.Timer.SECOND, function()
                         {
                             MonsterTruck.Level++;
-                            this.state.start('Game');
+                            this.state.start('End');
                         }, this);
                     }
                  }, this);
@@ -149,7 +149,6 @@ MonsterTruck.GameState = {
         this.count = -1;          
         this.gas = this.add.button(460, 420, 'gas', function()
         {
-            console.log('updated');
             this.count++;
             if(this.ins!=undefined)
             {
@@ -224,7 +223,6 @@ MonsterTruck.GameState = {
             //Checks that the truck has not hit the top or bottom of the hill and reacts accordingly if so
             if(!this.start && this.sprite.y >= 600)
             {
-                console.log('k');
                 this.sprite.body.velocity.x=0;
                 this.sprite.body.velocity.y=0;
                 this.start = true;
@@ -232,25 +230,24 @@ MonsterTruck.GameState = {
             if(this.sprite.x > 900)
             {
                 MonsterTruck.Level++;
-                this.state.start('Game');
+                this.state.start('End');
             }
         }
         else if(MonsterTruck.Level === 1)
         {
             this.distance.setText(`Distance: ${Math.round(this.battleArena.tilePosition.x)} feet`);
             this.battleArena.tilePosition.x+=this.pull;
-            console.log(this.battleArena.tilePosition.x);
             if(this.battleArena.tilePosition.x >= 900)
             {
                 console.log('player win');
                 MonsterTruck.Level++;
-                this.state.start('Game');
+                this.state.start('End');
             }
             else if(this.battleArena.tilePosition.x <=-500)
             {
                 console.log('player lose');
                 MonsterTruck.Level++;
-                this.state.start('Game');
+                this.state.start('End');
             }
         }
         else if(MonsterTruck.Level === 2)
@@ -287,7 +284,7 @@ MonsterTruck.GameState = {
                                     end.onComplete.add(function()
                                     {
                                         MonsterTruck.Level++;
-                                        this.state.start('Game')
+                                        this.state.start('End')
                                     }, this);
                                 }, this);
                             }, this);
