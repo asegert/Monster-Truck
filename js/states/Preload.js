@@ -19,16 +19,14 @@ MonsterTruck.PreloadState = {
         this.load.image('chain', 'assets/images/chain.png');
         
         
-        this.load.spritesheet('player', 'assets/images/monsterTruckSpritesheetred.png', 700, 420, 8);
-        this.load.spritesheet('playerLeft', 'assets/images/monsterTruckSpritesheetred.png', 700, 420, 8);
-        this.load.spritesheet('playerRight', 'assets/images/monsterTruckSpritesheetredright.png', 700, 420, 8);
+        this.load.spritesheet('player', 'assets/images/monsterTruckSpritesheetred.png', 700, 420, 4);
+        this.load.spritesheet('playerRight', 'assets/images/monsterTruckSpritesheetredright.png', 700, 420, 4);
         
-        this.load.spritesheet('enemy', 'assets/images/monsterTruckSpritesheetpurple.png', 700, 420, 8);
-        this.load.spritesheet('enemyRight', 'assets/images/monsterTruckSpritesheetpurpleright.png', 700, 420, 8);
+        this.load.spritesheet('enemyRight', 'assets/images/monsterTruckSpritesheetpurpleright.png', 700, 420, 3);
         
         this.load.image('battleArenaHorizontal', 'assets/images/battleArenaHorizontal.png');
-        this.load.image('battleArenaJump', 'assets/images/battleArenaJump.png');
         this.load.image('hill', 'assets/images/hill.png');
+        this.load.image('jump', 'assets/images/jump.png');
         this.load.image('gas', 'assets/images/gas.png');
         this.load.image('winner', 'assets/images/winner.png');
         this.load.image('gauge', 'assets/images/rpmGauge.png');

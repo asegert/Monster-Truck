@@ -35,7 +35,7 @@ MonsterTruck.GameState = {
     },
     startBattleOne: function()
     {
-        this.battleArena = this.add.sprite(-1920, 0, 'battleArenaHorizontal');
+        this.battleArena = this.add.sprite(0, 0, 'battleArenaHorizontal');
         //Boolean to track whether the climb has begun or not
         this.start = true;
         this.holding = false;
@@ -51,24 +51,7 @@ MonsterTruck.GameState = {
         
         this.times = 10;
         this.countDown = this.add.text(200, 0, `Time: ${this.times}`, {fill: '#ff0000', font: '28px Arial', stroke: '#ffff00', strokeThickness: '3'});
-        this.time.events.repeat(Phaser.Timer.SECOND, 11, function()
-        {
-            this.times--;
-            if(this.times >= 0)
-                this.countDown.setText(`Time: ${this.times}`);
-            else
-            {
-                this.gas.destroy();
-                this.sprite.body.velocity.x+=-968;
-                this.sprite.body.velocity.y+=800;
-                this.countDown.setText(`You Lose`);
-                this.time.events.add(Phaser.Timer.SECOND, function()
-                {
-                    MonsterTruck.Level++;
-                    this.state.start('Game');
-                }, this);
-            }
-        }, this);
+        this.counting = false;
         
         this.sprite.animations.play('walk', 5, true);
         this.sprite.scale.setTo(0.3, 0.3);
@@ -84,7 +67,28 @@ MonsterTruck.GameState = {
         this.gas.inputEnabled = true;
         this.gas.events.onInputDown.add(function()
         {
-            //Remove the instructions
+            if(!this.counting)
+            {
+               this.counting = true;
+                this.time.events.repeat(Phaser.Timer.SECOND, 11, function()
+                {
+                    this.times--;
+                    if(this.times >= 0)
+                        this.countDown.setText(`Time: ${this.times}`);
+                    else
+                    {
+                        this.gas.destroy();
+                        this.sprite.body.velocity.x+=-968;
+                        this.sprite.body.velocity.y+=800;
+                        this.countDown.setText(`You Lose`);
+                        this.time.events.add(Phaser.Timer.SECOND, function()
+                        {
+                            MonsterTruck.Level++;
+                            this.state.start('Game');
+                        }, this);
+                    }
+                 }, this);
+            }//Remove the instructions
             this.ins.alpha=0;
             //Show that pedal is active
             this.gas.alpha=0.8;
@@ -117,9 +121,9 @@ MonsterTruck.GameState = {
     startBattleTwo: function()
     {
         //Pull away from the opponent
-        this.battleArena = this.add.sprite(-1920, 0, 'battleArenaHorizontal');
+        this.battleArena = this.add.tileSprite(0, 0, 960, 640, 'battleArenaHorizontal');
         this.insAlert = this.add.text(300, 0, `Tug-o-War`, {fill: '#ff0000', font: '64px Arial', stroke: '#ffff00', strokeThickness: '3'});
-        this.distance = this.add.text(0, 0, `Distance: ${Math.abs(this.battleArena.x)}m`, {fill: '#ffffff'});
+        this.distance = this.add.text(0, 0, `Distance: ${Math.abs(this.battleArena.x)}feet`, {fill: '#ffffff'});
         
         this.chain = this.add.sprite(320, 440, 'chain');            
         this.battlePlayer = this.add.sprite(50, 500, 'player');
@@ -138,11 +142,15 @@ MonsterTruck.GameState = {
         this.arrow = this.add.sprite(125, 250, 'arrow');
         this.arrow.alpha = 0;
         this.add.tween(this.arrow).to({alpha: 1}, 500, "Linear", true, 0, -1);
+        
+        this.pull=0.1;
                         
         this.ins = this.add.sprite(0, 0, 'battle3Ins');
-                    
+        this.count = -1;          
         this.gas = this.add.button(460, 420, 'gas', function()
         {
+            console.log('updated');
+            this.count++;
             if(this.ins!=undefined)
             {
                 this.ins.alpha=0;
@@ -151,13 +159,13 @@ MonsterTruck.GameState = {
                 this.time.events.loop(Phaser.Timer.SECOND, function()
                 {
                     if(!this.over)
-                        this.add.tween(this.battleArena).to({x: this.battleArena.x - (Math.round(Math.random()*50) + 15)}, 100, "Linear", true);
+                        this.pull-=0.1;
                 }, this);
             }
-            else if(this.arrow!=undefined)
+            else if(this.count >= 10)
                 this.arrow.destroy();
             if(!this.over)
-                this.add.tween(this.battleArena).to({x: this.battleArena.x + 30}, 100, "Linear", true);
+                this.pull+=0.05
          }, this);
          //Alert to hit the gas
          this.alert = this.add.sprite(400, 420, 'alertBattle');
@@ -169,7 +177,7 @@ MonsterTruck.GameState = {
     startBattleThree: function()
     {
         //Jump
-        this.battleArena = this.add.sprite(0, 0, 'battleArenaJump');
+        this.battleArena = this.add.tileSprite(0, 0, 960, 640, 'battleArenaHorizontal');//this.add.sprite(0, 0, 'battleArenaJump');
         this.physics.enable(this.battleArena, Phaser.Physics.ARCADE);
         
         this.powerText = this.add.text(0, 4, 'Speed: ', {fill: '#ffffff'});
@@ -185,6 +193,7 @@ MonsterTruck.GameState = {
         this.battlePlayer.animations.play('walk', 5, true);
                         
         this.ins = this.add.sprite(0, 0, 'battle2Ins');
+        this.pull = 0;
                     
         this.gas = this.add.button(760, 420, 'gas', function()
         {
@@ -193,10 +202,10 @@ MonsterTruck.GameState = {
                 this.ins.alpha=0;
                 this.ins=undefined;
             } 
-            if(!this.disable)
+            if(this.jump===undefined)
             {
-                this.battleArena.body.velocity.x-=10;
-                this.power = new Phaser.Line(50, 10, 50 + Math.abs(this.battleArena.body.velocity.x), 10);
+                this.pull+=0.5;
+                this.power = new Phaser.Line(50, 10, 50 + Math.abs(this.pull*10), 10);
             }
         }, this);
         //Alert to hit the gas
@@ -228,14 +237,16 @@ MonsterTruck.GameState = {
         }
         else if(MonsterTruck.Level === 1)
         {
-            this.distance.setText(`Distance: ${Math.round(Math.abs(this.battleArena.x))}m`);
-            if(this.battleArena.x >= -50)
+            this.distance.setText(`Distance: ${Math.round(this.battleArena.tilePosition.x)} feet`);
+            this.battleArena.tilePosition.x+=this.pull;
+            console.log(this.battleArena.tilePosition.x);
+            if(this.battleArena.tilePosition.x >= 900)
             {
                 console.log('player win');
                 MonsterTruck.Level++;
                 this.state.start('Game');
             }
-            else if(this.battleArena.x <=-3750)
+            else if(this.battleArena.tilePosition.x <=-500)
             {
                 console.log('player lose');
                 MonsterTruck.Level++;
@@ -244,46 +255,45 @@ MonsterTruck.GameState = {
         }
         else if(MonsterTruck.Level === 2)
         {
-            if(this.battleArena.x<-900 && this.battleArena.x >-2050 && !this.jumping)
+            this.battleArena.tilePosition.x-=this.pull;
+            if(this.battleArena.tilePosition.x <= -900 && this.jump===undefined)
             {
-                this.disable = true;
-                this.jumping = true;
-                var rot = this.add.tween(this.battlePlayer).to({angle: -30}, (0.001 * this.battleArena.body.velocity.x), "Linear", true);
-                rot.onComplete.add(function()
+                this.jump = this.add.sprite(960, 500, 'jump');
+                this.moveTween = this.add.tween(this.jump).to({x: 450}, 1000, "Linear", true);
+                this.moveTween.onComplete.add(function()
                 {
-                    var higher = this.add.tween(this.battlePlayer).to({x: 300, y: 250}, (3 * this.battleArena.body.velocity.x), "Linear", true);
-                    higher.onComplete.add(function()
+                    this.add.tween(this.jump).to({x: -300}, 3000, "Linear", true);
+                    var rot = this.add.tween(this.battlePlayer).to({angle: -30}, (1000), "Linear", true);
+                    rot.onComplete.add(function()
                     {
-                        this.battleArena.body.velocity.x = this.battleArena.body.velocity.x * 2;
+                        var higher = this.add.tween(this.battlePlayer).to({x: 300, y: 250}, (1000), "Linear", true);
+                        higher.onComplete.add(function()
+                        {
+                            var rotate = this.add.tween(this.battlePlayer).to({angle: -10}, 1000, "Linear", true);
+                            
+                            this.time.events.add(Phaser.Timer.SECOND * 3, function()
+                            {
+                                this.add.text(120, 200, `The Truck Jumped ${Math.round(Math.abs((this.pull * 10)))} feet`, {fill: '#ff0000', font: '64px Arial', stroke: '#ffff00', strokeThickness: '3'});
+                                this.add.tween(this.battlePlayer).to({angle: 20}, 500, "Linear", true);
+                                this.add.tween(this.battlePlayer).to({y: 500}, 2000, "Linear", true);
+                                
+                                this.jump = this.add.sprite(960, 500, 'jump');
+                                this.jump.scale.setTo(-1, 1);
+                                this.moveTweens = this.add.tween(this.jump).to({x: 650}, 1000, "Linear", true);
+                                this.moveTweens.onComplete.add(function()
+                                {
+                                    this.add.tween(this.battlePlayer).to({angle: 0}, 2000, "Linear", true);
+                                    var end = this.add.tween(this.jump).to({x: -300}, 3000, "Linear", true);
+                                    end.onComplete.add(function()
+                                    {
+                                        MonsterTruck.Level++;
+                                        this.state.start('Game')
+                                    }, this);
+                                }, this);
+                            }, this);
+                        }, this);
                     }, this);
                 }, this);
-            }
-            if(this.battleArena.x < -3500 && this.over)
-            {
-                this.add.text(120, 200, `The Truck Jumped ${Math.abs(this.battleArena.body.velocity.x)}m`, {fill: '#ff0000', font: '64px Arial', stroke: '#ffff00', strokeThickness: '3'});
-                this.over = false;
-                this.battleArena.body.velocity.x=0;
-                var rotate = this.add.tween(this.battlePlayer).to({angle: 20}, (2 * this.battleArena.body.velocity.x), "Linear", true);
-                rotate.onComplete.add(function()
-                {
-                    this.add.tween(this.battlePlayer).to({angle: 0}, (0.2 * this.battleArena.body.velocity.x), "Linear", true);
-                }, this);
-                var last = this.add.tween(this.battlePlayer).to({x: 1000, y: 500}, (2.8 * this.battleArena.body.velocity.x), "Linear", true);
-                last.onComplete.add(function()
-                {
-                    MonsterTruck.Level++;
-                    this.time.events.add(Phaser.Timer.SECOND * 2, function()
-                    {
-                        this.state.start('Game');
-                    }, this);
-                }, this);
-            }
-            if(this.battleArena.x<-2050 && this.jumping)
-            {
-                this.jumping = false;
-                this.over = true;
-                console.log(this.battleArena.body.velocity.x);
-                this.add.tween(this.battlePlayer).to({angle: -10}, (1 * this.battleArena.body.velocity.x), "Linear", true);
             }
         }
     },
